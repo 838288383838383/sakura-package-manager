@@ -21,7 +21,10 @@ function Show-SakuraBuckets {
 }
 
 function Add-SakuraBucket {
-    param([string]$Name)
+    param(
+        [string]$Name,
+        [string]$Url = ""
+    )
 
     $bucketPath = Join-Path $Script:SakuraBuckets $Name
     if (Test-Path $bucketPath) {
@@ -31,33 +34,36 @@ function Add-SakuraBucket {
 
     Write-SakuraProgress "Adding bucket: $Name"
 
-    # For now, create local bucket directory
-    # In future, support git clone from GitHub
-    New-Item -ItemType Directory -Path "$bucketPath\bucket" -Force | Out-Null
-
-    # Create a placeholder README
-    $readme = @"
-# $Name Bucket
-This is a Sakura package bucket.
-Add JSON manifests to the bucket/ directory.
-
-Each manifest should follow this format:
-{
-    "name": "app-name",
-    "version": "1.0.0",
-    "description": "App description",
-    "url": "https://example.com/app.zip",
-    "hash": "sha256-hash-here",
-    "bin": ["app.exe"],
-    "checkver": {
-        "url": "https://example.com/releases",
-        "regex": "v([\d.]+)"
+    # Well-known bucket URLs
+    $knownBuckets = @{
+        "community" = "https://github.com/838288383838383/sakura-community-bucket.git"
     }
-}
-"@
-    Set-Content -Path (Join-Path $bucketPath "README.md") -Value $readme -Encoding UTF8
 
-    Write-SakuraSuccess "Bucket '$Name' added successfully."
+    if (-not $Url -and $knownBuckets.ContainsKey($Name)) {
+        $Url = $knownBuckets[$Name]
+    }
+
+    if ($Url) {
+        # Clone from git
+        Write-SakuraProgress "Cloning from: $Url"
+        try {
+            $ProgressPreference = 'SilentlyContinue'
+            git clone $Url $bucketPath 2>&1
+            if (-not (Test-Path $bucketPath)) {
+                Write-SakuraError "Failed to clone bucket."
+                return
+            }
+            $manifestCount = (Get-ChildItem -Path (Join-Path $bucketPath "bucket") -Filter "*.json" -ErrorAction SilentlyContinue).Count
+            Write-SakuraSuccess "Bucket '$Name' added with $manifestCount packages."
+        } catch {
+            Write-SakuraError "Failed to clone bucket: $_"
+            return
+        }
+    } else {
+        # Create empty local bucket
+        New-Item -ItemType Directory -Path "$bucketPath\bucket" -Force | Out-Null
+        Write-SakuraSuccess "Bucket '$Name' created locally."
+    }
 }
 
 function Remove-SakuraBucket {
