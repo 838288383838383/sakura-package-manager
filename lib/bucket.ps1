@@ -43,6 +43,7 @@ function Add-SakuraBucket {
         "community" = "https://github.com/838288383838383/sakura-community-bucket.git"
         "nonportable" = "https://github.com/838288383838383/sakura-nonportable-bucket.git"
         "wsl" = "https://github.com/838288383838383/sakura-wsl-bucket.git"
+        "langs" = "https://github.com/838288383838383/sakura-package-manager.git"
     }
 
     if (-not $Url -and $knownBuckets.ContainsKey($Name)) {
