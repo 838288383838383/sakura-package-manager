@@ -37,18 +37,18 @@ Meet **Sakura-chan**, your digital companion!
 ### Installation
 
 ```powershell
-# Clone the repo
-git clone https://github.com/838288383838383/sakura-package-manager.git
+# One-liner install (like Scoop)
+irm https://raw.githubusercontent.com/838288383838383/sakura-package-manager/main/install-online.ps1 | iex
+```
 
-# Run the installer
+Or clone and install manually:
+```powershell
+git clone https://github.com/838288383838383/sakura-package-manager.git
 cd sakura-package-manager
 .\install.ps1
 ```
 
-Or use the one-liner:
-```powershell
-iex (iwr -useb https://raw.githubusercontent.com/838288383838383/sakura-package-manager/main/install.ps1).Content
-```
+> Execution policy is set automatically (like Scoop).
 
 ### First Steps
 

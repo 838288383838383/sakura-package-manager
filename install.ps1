@@ -1,23 +1,43 @@
 # Sakura Installer
 # Run this to install Sakura Package Manager on your system
+# Bypasses execution policy automatically (like Scoop)
 
 param(
-    [string]$InstallDir = "$env:USERPROFILE\.sakura"
+    [string]$InstallDir = "$env:USERPROFILE\.sakura",
+    [switch]$NoProfile
 )
 
 $ErrorActionPreference = "Stop"
-$SakuraVersion = "0.1.0"
+$SakuraVersion = "2.0.1"
 
 Write-Host ""
 Write-Host "    🌸 S A K U R A   I N S T A L L E R 🌸" -ForegroundColor Magenta
 Write-Host "    ════════════════════════════════════════" -ForegroundColor DarkGray
 Write-Host ""
 
+# Bypass execution policy (like Scoop does)
+$currentPolicy = Get-ExecutionPolicy -Scope CurrentUser
+if ($currentPolicy -ne "RemoteSigned" -and $currentPolicy -ne "Unrestricted" -and $currentPolicy -ne "Bypass") {
+    Write-Host "  Setting execution policy to RemoteSigned..." -ForegroundColor Cyan
+    try {
+        Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+        Write-Host "  ✅ Execution policy set to RemoteSigned" -ForegroundColor Green
+    } catch {
+        Write-Host "  ⚠️  Could not set execution policy (may need admin)" -ForegroundColor Yellow
+        Write-Host "  Trying Bypass for current process..." -ForegroundColor Yellow
+        Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+    }
+}
+
 # Check PowerShell version
 if ($PSVersionTable.PSVersion.Major -lt 5) {
     Write-Host "  [ERR] PowerShell 5.0 or higher required." -ForegroundColor Red
     exit 1
 }
+
+Write-Host "  PowerShell $($PSVersionTable.PSVersion) detected" -ForegroundColor DarkGray
+Write-Host "  Install directory: $InstallDir" -ForegroundColor DarkGray
+Write-Host ""
 
 # Create directories
 Write-Host "  Creating directories..." -ForegroundColor Cyan
