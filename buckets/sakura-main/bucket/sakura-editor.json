@@ -1,0 +1,23 @@
+{
+    "name": "sakura-editor",
+    "version": "0.1.0",
+    "description": "Sakura Editor - A blazing fast code editor with AI integration",
+    "homepage": "https://github.com/838288383838383/sakura-editor",
+    "license": "MIT",
+    "url": "https://github.com/838288383838383/sakura-editor/releases/download/v0.1.0/sakura-editor-v0.1.0-win64.zip",
+    "hash": "5BBAF66F29768C63009E1B7068882EB4B391A8D8F990AB9E23F8673E92C88015",
+    "extract_dir": ".",
+    "bin": "sakura-editor.exe",
+    "shortcuts": [
+        ["Sakura Editor", "sakura-editor.exe"]
+    ],
+    "persist": [
+        "config",
+        "themes"
+    ],
+    "suggest": {
+        "ripgrep": "Fast file search",
+        "nodejs": "LSP support",
+        "git": "Version control"
+    }
+}
