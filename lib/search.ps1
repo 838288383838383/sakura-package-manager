@@ -1,5 +1,24 @@
 # Sakura Search System
 
+function Show-SakuraInstalled {
+    $apps = Get-ChildItem -Path $Script:SakuraApps -Directory -ErrorAction SilentlyContinue
+    if ($apps.Count -eq 0) {
+        Write-SakuraInfo "No apps installed. Use: sakura install <app>"
+        return
+    }
+    Write-Host ""
+    Write-Host "  Installed Apps:" -ForegroundColor Cyan
+    Write-Host "  ----------------" -ForegroundColor DarkGray
+    foreach ($app in $apps) {
+        $manifest = Get-InstalledManifest -AppName $app.Name
+        $ver = if ($manifest -and $manifest.version) { $manifest.version } else { "?" }
+        Write-Host "    $($app.Name) v$ver" -ForegroundColor White
+    }
+    Write-Host ""
+    Write-Host "  Total: $($apps.Count) app(s)" -ForegroundColor DarkGray
+    Write-Host ""
+}
+
 function Search-SakuraPackages {
     param([string]$Query)
 

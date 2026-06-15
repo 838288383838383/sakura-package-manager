@@ -51,23 +51,20 @@ function Add-SakuraBucket {
 
     if ($Url) {
         Write-SakuraProgress "Cloning from: $Url"
-        try {
-            $ProgressPreference = 'SilentlyContinue'
-            git clone $Url $bucketPath 2>&1
-            if (-not (Test-Path $bucketPath)) {
-                Write-SakuraError "Failed to clone bucket."
-                return
-            }
-            $bucketDir = Join-Path $bucketPath "bucket"
-            $manifestCount = 0
-            if (Test-Path $bucketDir) {
-                $manifestCount = (Get-ChildItem -Path $bucketDir -Filter "*.json" -ErrorAction SilentlyContinue).Count
-            }
-            Write-SakuraSuccess "Bucket '$Name' added with $manifestCount packages."
-        } catch {
-            Write-SakuraError "Failed to clone bucket: $_"
+        $ProgressPreference = 'SilentlyContinue'
+        $ErrorActionPreference = 'SilentlyContinue'
+        git clone $Url $bucketPath 2>&1 | Out-Null
+        $ErrorActionPreference = 'Stop'
+        if (-not (Test-Path $bucketPath)) {
+            Write-SakuraError "Failed to clone bucket."
             return
         }
+        $bucketDir = Join-Path $bucketPath "bucket"
+        $manifestCount = 0
+        if (Test-Path $bucketDir) {
+            $manifestCount = (Get-ChildItem -Path $bucketDir -Filter "*.json" -ErrorAction SilentlyContinue).Count
+        }
+        Write-SakuraSuccess "Bucket '$Name' added with $manifestCount packages."
     } else {
         New-Item -ItemType Directory -Path "$bucketPath\bucket" -Force | Out-Null
         Write-SakuraSuccess "Bucket '$Name' created locally."
