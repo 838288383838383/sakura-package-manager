@@ -39,7 +39,7 @@ $SakuraVersion = "2.0.1"
 . "$SakuraRoot\lib\wsl.ps1"
 
 # Load pet module
-Import-Module "$SakuraRoot\modules\SakuraPet\SakuraPet.psm1" -Force
+Import-Module "$SakuraRoot\modules\SakuraPet\SakuraPet.psm1" -Force -DisableNameChecking
 
 # Initialize
 Initialize-Sakura
