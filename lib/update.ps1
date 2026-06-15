@@ -94,3 +94,83 @@ function Update-SinglePackage {
 
     Write-SakuraSuccess "$Name updated to $($latestManifest.version)"
 }
+
+function Update-SakuraSelf {
+    Write-Host ""
+    Write-Host "  🌸 Updating Sakura Package Manager..." -ForegroundColor Magenta
+    Write-Host "  ═══════════════════════════════════════" -ForegroundColor DarkGray
+
+    $sakuraHome = Split-Path -Parent $Script:SakuraRoot
+
+    # Check if we're in a git repo
+    $gitDir = Join-Path $sakuraHome ".git"
+    if (-not (Test-Path $gitDir)) {
+        Write-SakuraError "Sakura is not installed from git. Cannot self-update."
+        Write-SakuraInfo "Reinstall from: https://github.com/838288383838383/sakura-package-manager"
+        return
+    }
+
+    Write-SakuraProgress "Checking for updates..."
+    try {
+        $ProgressPreference = 'SilentlyContinue'
+        git -C $sakuraHome fetch origin main 2>&1 | Out-Null
+
+        $local = git -C $sakuraHome rev-parse HEAD
+        $remote = git -C $sakuraHome rev-parse origin/main
+
+        if ($local -eq $remote) {
+            Write-SakuraSuccess "Sakura is already up to date! (v$SakuraVersion)"
+            Write-Host ""
+            return
+        }
+
+        # Show what's new
+        Write-Host ""
+        Write-Host "  📦 Updates available:" -ForegroundColor Yellow
+        $commits = git -C $sakuraHome log --oneline "$local..$remote" 2>&1
+        foreach ($commit in $commits) {
+            Write-Host "    • $commit" -ForegroundColor DarkGray
+        }
+        Write-Host ""
+
+        # Backup current version
+        $backupDir = Join-Path $env:TEMP "sakura_backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+        New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
+        Copy-Item -Path "$sakuraHome\lib\*" -Destination "$backupDir" -Recurse -Force
+        Copy-Item -Path "$sakuraHome\bin\*" -Destination "$backupDir" -Recurse -Force
+        Copy-Item -Path "$sakuraHome\modules" -Destination "$backupDir" -Recurse -Force
+        Write-SakuraInfo "Backup saved to: $backupDir"
+
+        # Pull update
+        Write-SakuraProgress "Pulling update..."
+        git -C $sakuraHome pull origin main 2>&1 | Out-Null
+
+        # Get new version
+        $newVersion = git -C $sakuraHome describe --tags --abbrev=0 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            # Try to extract from core.ps1
+            $coreContent = Get-Content -Path "$sakuraHome\lib\core.ps1" -Raw
+            if ($coreContent -match 'SakuraVersion\s*=\s*"(.+?)"') {
+                $newVersion = $Matches[1]
+            } else {
+                $newVersion = "unknown"
+            }
+        }
+
+        Write-Host ""
+        Write-Host "  ✅ Sakura updated successfully!" -ForegroundColor Green
+        Write-Host "  🌸 New version: $newVersion" -ForegroundColor Magenta
+        Write-Host ""
+        Write-Host "  Restart your terminal or run:" -ForegroundColor Yellow
+        Write-Host "    sakura version" -ForegroundColor White
+        Write-Host ""
+
+        # Update pet
+        Add-PetExperience -Amount 50 -Reason "Updated Sakura itself"
+
+    } catch {
+        Write-SakuraError "Update failed: $_"
+        Write-SakuraInfo "You can manually run: git -C $sakuraHome pull origin main"
+        return
+    }
+}

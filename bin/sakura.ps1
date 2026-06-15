@@ -69,6 +69,9 @@ function Show-Help {
     Write-Host "    list                           List installed apps"
     Write-Host "    info <app>                     Show app information"
     Write-Host "    upgrade                        Upgrade all apps"
+    Write-Host "`n  Self Update:" -ForegroundColor Yellow
+    Write-Host "    updt                           Update Sakura itself"
+    Write-Host "    update -sak                    Update Sakura (short form)"
     Write-Host "`n  Bucket Commands:" -ForegroundColor Yellow
     Write-Host "    bucket list                    List added buckets"
     Write-Host "    bucket add <name>              Add a bucket"
@@ -128,7 +131,14 @@ switch ($Command.ToLower()) {
         }
     }
     { $_ -in @("update", "up") } {
-        Update-SakuraPackages -Names $Arguments
+        if ($Arguments -contains "-sak" -or $Arguments -contains "--self") {
+            Update-SakuraSelf
+        } else {
+            Update-SakuraPackages -Names $Arguments
+        }
+    }
+    { $_ -in @("updt", "selfupdate", "self-update") } {
+        Update-SakuraSelf
     }
     { $_ -in @("upgrade", "ug") } {
         Update-SakuraPackages -All
