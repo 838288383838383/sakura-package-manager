@@ -1,5 +1,5 @@
 # Sakura Package Manager - Remote Installer
-# Run with: irm https://raw.githubusercontent.com/838288383838383/sakura-package-manager/main/install-online.ps1 | iex
+# Run with: powershell -NoProfile -Command "irm https://raw.githubusercontent.com/838288383838383/sakura-package-manager/main/install-online.ps1 | iex"
 
 $ErrorActionPreference = "Stop"
 
@@ -22,6 +22,14 @@ $RepoUrl = "https://github.com/838288383838383/sakura-package-manager/archive/re
 $ZipPath = "$env:TEMP\sakura-main.zip"
 $isInstalled = Test-Path "$InstallDir\bin\sakura.ps1"
 
+function Ensure-ShimsDir {
+    param([string]$Dir)
+    $shimsDir = "$Dir\shims"
+    if (-not (Test-Path $shimsDir)) {
+        New-Item -ItemType Directory -Path $shimsDir -Force | Out-Null
+    }
+}
+
 function Update-ByGit {
     param([string]$Dir)
     Write-Host "  Updating via git..." -ForegroundColor Cyan
@@ -37,7 +45,9 @@ function Update-ByGit {
             git pull origin main 2>&1 | Out-Null
             Pop-Location
         } else {
-            Remove-Item -Recurse -Force $Dir -ErrorAction SilentlyContinue
+            # Must remove existing dir before cloning
+            Write-Host "  Removing old install..." -ForegroundColor DarkGray
+            Remove-Item -Recurse -Force $Dir -ErrorAction Stop
             git clone https://github.com/838288383838383/sakura-package-manager.git $Dir 2>&1 | Out-Null
         }
         Write-Host "  Updated via git!" -ForegroundColor Green
@@ -72,6 +82,7 @@ function Update-ByDownload {
 
 function Repair-Shims {
     param([string]$Dir)
+    Ensure-ShimsDir -Dir $Dir
     Write-Host "  Repairing shims..." -ForegroundColor Cyan
     $sakuraCmd = "$Dir\bin\sakura.ps1"
     $sakuraShim = "$Dir\shims\sakura.cmd"
@@ -162,6 +173,7 @@ if (Test-Path $extractedDir) {
 Remove-Item -Path $ZipPath -Force -ErrorAction SilentlyContinue
 
 # Create shims
+Ensure-ShimsDir -Dir $InstallDir
 $sakuraCmd = "$InstallDir\bin\sakura.ps1"
 $sakuraShim = "$InstallDir\shims\sakura.cmd"
 $sakContent = @"
