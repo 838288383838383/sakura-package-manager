@@ -97,7 +97,7 @@ $sakuraCmd = "$InstallDir\bin\sakura.ps1"
 $sakuraShim = "$InstallDir\shims\sakura.cmd"
 $sakContent = @"
 @echo off
-powershell -ExecutionPolicy Bypass -File "$sakuraCmd" %*
+powershell -NoProfile -ExecutionPolicy Bypass -File "$sakuraCmd" %*
 "@
 Set-Content -Path $sakuraShim -Value $sakContent -Encoding ASCII
 Copy-Item -Path $sakuraShim -Destination "$InstallDir\shims\sak.cmd" -Force
