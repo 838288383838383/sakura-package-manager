@@ -60,6 +60,15 @@ function Add-SakuraBucket {
             Write-SakuraError "Failed to clone bucket."
             return
         }
+        
+        # If bucket is inside a subdirectory (like langs), copy it up
+        $nestedBucket = Join-Path $bucketPath "buckets\$Name\bucket"
+        if (Test-Path $nestedBucket) {
+            $targetBucket = Join-Path $bucketPath "bucket"
+            if (-not (Test-Path $targetBucket)) { cmd /c mkdir "$targetBucket" 2>&1 | Out-Null }
+            Copy-Item -Path "$nestedBucket\*" -Destination $targetBucket -Force -ErrorAction SilentlyContinue
+        }
+        
         $bucketDir = Join-Path $bucketPath "bucket"
         $manifestCount = 0
         if (Test-Path $bucketDir) {
