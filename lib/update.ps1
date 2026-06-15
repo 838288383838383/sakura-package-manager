@@ -63,7 +63,7 @@ function Update-SinglePackage {
         return  # Already up to date
     }
 
-    Write-Host "  Updating $Name: $($installedManifest.version) -> $($latestManifest.version)" -ForegroundColor Yellow
+    Write-Host "  Updating ${Name}: $($installedManifest.version) -> $($latestManifest.version)" -ForegroundColor Yellow
 
     # Uninstall old version (but keep persist)
     $appPath = Join-Path $Script:SakuraApps $Name
