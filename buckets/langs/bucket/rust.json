@@ -1,0 +1,30 @@
+{
+    "name": "rust",
+    "version": "1.96.0",
+    "description": "Rust programming language - a language empowering everyone to build reliable and efficient software",
+    "homepage": "https://www.rust-lang.org/",
+    "license": "MIT OR Apache-2.0",
+    "url": "https://win.rustup.com/x86_64/rustup-init.exe",
+    "hash": "",
+    "bin": "rustup-init.exe",
+    "post_install": [
+        "rustup default stable",
+        "rustup component add rust-analyzer"
+    ],
+    "env_add_path": [
+        "$HOME\\.cargo\\bin"
+    ],
+    "depends": [
+        "vs-buildtools"
+    ],
+    "suggest": {
+        "vs-buildtools": "MSVC build tools for Windows"
+    },
+    "checkver": {
+        "url": "https://static.rust-lang.org/dist/channel-rust-stable.toml",
+        "regex": "version = \"([\\d.]+)\""
+    },
+    "autoupdate": {
+        "url": "https://win.rustup.com/x86_64/rustup-init.exe"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "name": "go",
+    "version": "1.22.4",
+    "description": "Go programming language - build fast, reliable, and efficient software at scale",
+    "homepage": "https://go.dev/",
+    "license": "BSD-3-Clause",
+    "url": "https://go.dev/dl/go1.22.4.windows-amd64.zip",
+    "hash": "",
+    "extract_dir": "go",
+    "bin": "bin\\go.exe",
+    "env_set": {
+        "GOROOT": "$dir"
+    },
+    "env_add_path": [
+        "bin"
+    ],
+    "checkver": {
+        "url": "https://go.dev/dl/?mode=json",
+        "jsonpath": "$[0].version",
+        "regex": "go([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://go.dev/dl/go${version}.windows-amd64.zip",
+        "extract_dir": "go"
+    }
+}

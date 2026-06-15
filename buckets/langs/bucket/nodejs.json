@@ -1,0 +1,27 @@
+{
+    "name": "nodejs",
+    "version": "20.15.0",
+    "description": "Node.js - JavaScript runtime built on Chrome's V8 JavaScript engine",
+    "homepage": "https://nodejs.org/",
+    "license": "MIT",
+    "url": "https://nodejs.org/dist/v20.15.0/node-v20.15.0-win-x64.zip",
+    "hash": "",
+    "extract_dir": "node-v20.15.0-win-x64",
+    "bin": [
+        "node.exe",
+        "npm.cmd",
+        "npx.cmd"
+    ],
+    "env_add_path": [
+        ""
+    ],
+    "checkver": {
+        "url": "https://nodejs.org/dist/index.json",
+        "jsonpath": "$[?(@.lts)].version",
+        "regex": "v([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://nodejs.org/dist/v${version}/node-v${version}-win-x64.zip",
+        "extract_dir": "node-v${version}-win-x64"
+    }
+}

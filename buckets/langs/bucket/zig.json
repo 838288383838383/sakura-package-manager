@@ -1,0 +1,19 @@
+{
+    "name": "zig",
+    "version": "0.13.0",
+    "description": "Zig programming language - robust, optimal, and maintainable",
+    "homepage": "https://ziglang.org/",
+    "license": "MIT",
+    "url": "https://ziglang.org/download/0.13.0/zig-windows-x86_64-0.13.0.zip",
+    "hash": "",
+    "extract_dir": "zig-windows-x86_64-0.13.0",
+    "bin": "zig.exe",
+    "checkver": {
+        "url": "https://ziglang.org/download/",
+        "regex": "zig-windows-x86_64-([\\d.]+)\\.zip"
+    },
+    "autoupdate": {
+        "url": "https://ziglang.org/download/${version}/zig-windows-x86_64-${version}.zip",
+        "extract_dir": "zig-windows-x86_64-${version}"
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "name": "python",
+    "version": "3.12.4",
+    "description": "Python programming language - powerful and easy to learn",
+    "homepage": "https://www.python.org/",
+    "license": "PSF-2.0",
+    "url": "https://www.python.org/ftp/python/3.12.4/python-3.12.4-amd64.exe",
+    "hash": "",
+    "installer": {
+        "type": "exe",
+        "args": [
+            "/quiet",
+            "InstallAllUsers=1",
+            "PrependPath=1",
+            "Include_test=0"
+        ]
+    },
+    "bin": [
+        "python.exe",
+        "pythonw.exe",
+        "pip.exe"
+    ],
+    "checkver": {
+        "url": "https://www.python.org/downloads/",
+        "regex": "Python ([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://www.python.org/ftp/python/${version}/python-${version}-amd64.exe"
+    }
+}

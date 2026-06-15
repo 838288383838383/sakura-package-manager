@@ -1,0 +1,25 @@
+{
+    "name": "vs-buildtools",
+    "version": "17.14.34",
+    "description": "Visual Studio 2022 Build Tools - C++ compiler and Windows SDK",
+    "homepage": "https://visualstudio.microsoft.com/visual-cpp-build-tools/",
+    "license": "MIT",
+    "url": "https://download.visualstudio.microsoft.com/download/pr/81974841-9fb9-441a-9e75-d5c6868e1a48/7fafe31ca7600525f4db64d1e6a2e73cad772478e65c335b58544cec527723ba/vs_BuildTools.exe",
+    "hash": "",
+    "nonportable": true,
+    "installer": {
+        "type": "exe",
+        "args": [
+            "--quiet",
+            "--wait",
+            "--add",
+            "Microsoft.VisualStudio.Workload.VCTools",
+            "--includeRecommended"
+        ],
+        "admin": true
+    },
+    "checkver": {
+        "url": "https://api.github.com/repos/microsoft/VisualStudio/releases/latest",
+        "jsonpath": "$.tag_name"
+    }
+}

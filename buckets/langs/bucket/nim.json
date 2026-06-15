@@ -1,0 +1,27 @@
+{
+    "name": "nim",
+    "version": "2.0.8",
+    "description": "Nim programming language - efficient, expressive, elegant",
+    "homepage": "https://nim-lang.org/",
+    "license": "MIT",
+    "url": "https://nim-lang.org/download/nim-2.0.8_x64.zip",
+    "hash": "",
+    "extract_dir": "nim-2.0.8",
+    "bin": [
+        "bin\\nim.exe",
+        "bin\\nimble.exe",
+        "bin\\nimgrep.exe",
+        "bin\\nimpretty.exe",
+        "bin\\nimsecret.exe"
+    ],
+    "env_add_path": [
+        "bin"
+    ],
+    "checkver": {
+        "url": "https://nim-lang.org/",
+        "regex": "Version ([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://nim-lang.org/download/nim-${version}_x64.zip"
+    }
+}
