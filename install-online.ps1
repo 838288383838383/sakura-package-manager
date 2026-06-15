@@ -28,8 +28,51 @@ if ($PSVersionTable.PSVersion.Major -lt 5) {
 $InstallDir = "$env:USERPROFILE\.sakura"
 $RepoUrl = "https://github.com/838288383838383/sakura-package-manager/archive/refs/heads/main.zip"
 $ZipPath = "$env:TEMP\sakura-main.zip"
+$isInstalled = Test-Path "$InstallDir\bin\sakura.ps1"
 
-# Create directories
+# Check if already installed - update instead
+if ($isInstalled) {
+    Write-Host "  Sakura is already installed!" -ForegroundColor Cyan
+    Write-Host "  Updating to latest version..." -ForegroundColor Cyan
+    Write-Host ""
+
+    # Pull latest from GitHub
+    $gitDir = "$InstallDir"
+    if (Test-Path "$gitDir\.git") {
+        Push-Location $gitDir
+        git pull origin main 2>&1 | Out-Null
+        Pop-Location
+    } else {
+        # Download and extract
+        Write-Host "  Downloading update..." -ForegroundColor Cyan
+        $ProgressPreference = 'SilentlyContinue'
+        try {
+            Invoke-WebRequest -Uri $RepoUrl -OutFile $ZipPath -UseBasicParsing
+        } catch {
+            Write-Host "  [ERR] Download failed: $_" -ForegroundColor Red
+            exit 1
+        }
+        Write-Host "  Extracting..." -ForegroundColor Cyan
+        Expand-Archive -Path $ZipPath -DestinationPath $InstallDir -Force
+        $extractedDir = Join-Path $InstallDir "sakura-package-manager-main"
+        if (Test-Path $extractedDir) {
+            Copy-Item -Path "$extractedDir\*" -Destination $InstallDir -Recurse -Force
+            Remove-Item -Path $extractedDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+        Remove-Item -Path $ZipPath -Force -ErrorAction SilentlyContinue
+    }
+
+    Write-Host ""
+    Write-Host "  Sakura updated successfully!" -ForegroundColor Green
+    Write-Host "    sak help          Show help" -ForegroundColor White
+    Write-Host "    sak install git   Install an app" -ForegroundColor White
+    Write-Host ""
+    Write-Host "  Pet your companion: sak pet" -ForegroundColor Magenta
+    Write-Host ""
+    exit 0
+}
+
+# Fresh install - create directories
 Write-Host "  Creating directories..." -ForegroundColor Cyan
 $dirs = @($InstallDir, "$InstallDir\apps", "$InstallDir\shims", "$InstallDir\buckets", "$InstallDir\cache", "$InstallDir\persist", "$InstallDir\data", "$InstallDir\pet")
 foreach ($dir in $dirs) {
