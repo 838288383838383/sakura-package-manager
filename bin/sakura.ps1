@@ -33,6 +33,7 @@ $SakuraVersion = "2.0.1"
 . "$SakuraRoot\lib\update.ps1"
 . "$SakuraRoot\lib\depends.ps1"
 . "$SakuraRoot\lib\train.ps1"
+. "$SakuraRoot\lib\wsl.ps1"
 
 # Load pet module
 Import-Module "$SakuraRoot\modules\SakuraPet\SakuraPet.psm1" -Force
@@ -73,6 +74,10 @@ function Show-Help {
     Write-Host "`n  Self Update:" -ForegroundColor Yellow
     Write-Host "    updt                           Update Sakura itself"
     Write-Host "    update -sak                    Update Sakura (short form)"
+    Write-Host "`n  WSL Commands:" -ForegroundColor Yellow
+    Write-Host "    wsl                            List installed WSL distros"
+    Write-Host "    wsl launch <distro>            Launch a WSL distro"
+    Write-Host "    wsl rm <distro>                Uninstall a WSL distro"
     Write-Host "`n  Bucket Commands:" -ForegroundColor Yellow
     Write-Host "    bucket list                    List added buckets"
     Write-Host "    bucket add <name>              Add a bucket"
@@ -135,8 +140,10 @@ switch ($Command.ToLower()) {
     { $_ -in @("update", "up") } {
         if ($Arguments -contains "-sak" -or $Arguments -contains "--self") {
             Update-SakuraSelf
-        } else {
+        } elseif ($Arguments.Count -gt 0 -and $Arguments[0] -ne "-sak") {
             Update-SakuraPackages -Names $Arguments
+        } else {
+            Update-SakuraPackages -All
         }
     }
     { $_ -in @("updt", "selfupdate", "self-update") } {
@@ -194,6 +201,24 @@ switch ($Command.ToLower()) {
                 "pet" { Pet-Pet }
                 "nap" { Nap-Pet }
                 default { Show-Pet }
+            }
+        }
+    }
+    "wsl" {
+        if ($Arguments.Count -eq 0) {
+            Show-WslDistros
+        } else {
+            switch ($Arguments[0].ToLower()) {
+                { $_ -in @("list", "ls") } { Show-WslDistros }
+                { $_ -in @("rm", "remove", "uninstall") } {
+                    if ($Arguments.Count -lt 2) { Write-Host "Distro name required." -ForegroundColor Red; exit 1 }
+                    Uninstall-WslDistro -DistroName $Arguments[1]
+                }
+                { $_ -in @("launch", "run", "open") } {
+                    if ($Arguments.Count -lt 2) { Write-Host "Distro name required." -ForegroundColor Red; exit 1 }
+                    wsl -d $Arguments[1]
+                }
+                default { Show-WslDistros }
             }
         }
     }

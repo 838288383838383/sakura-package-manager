@@ -1,0 +1,20 @@
+{
+    "name": "void-sakura",
+    "version": "rolling",
+    "description": "Void Linux - Independent Sakura distro with runit init",
+    "homepage": "https://voidlinux.org",
+    "license": "BSD-2-Clause",
+    "url": "https://github.com/void-linux/void-wsl/releases/latest/download/void-linux-latest-x86_64.tar.gz",
+    "hash": "",
+    "nonportable": true,
+    "wsl": true,
+    "wsl_name": "Void-Sakura",
+    "wsl_version": 2,
+    "installer": {
+        "type": "wsl",
+        "post_install": [
+            "wsl --set-version Void-Sakura 2",
+            "wsl -d Void-Sakura -- bash -c 'xbps-install -Su && xbps-install -y curl wget git gcc nodejs npm python3 python3-pip vim neovim'"
+        ]
+    }
+}

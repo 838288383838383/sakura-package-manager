@@ -1,0 +1,20 @@
+{
+    "name": "debian-sakura",
+    "version": "12",
+    "description": "Debian 12 Bookworm - Stable Sakura distro",
+    "homepage": "https://debian.org",
+    "license": "GPL-2.0",
+    "url": "https://github.com/yuk7/ArchWSL/releases/latest/download/debian.gz",
+    "hash": "",
+    "nonportable": true,
+    "wsl": true,
+    "wsl_name": "Debian-Sakura",
+    "wsl_version": 2,
+    "installer": {
+        "type": "wsl",
+        "post_install": [
+            "wsl --set-version Debian-Sakura 2",
+            "wsl -d Debian-Sakura -- bash -c 'apt update && apt upgrade -y && apt install -y curl wget git build-essential python3 python3-pip nodejs npm vim neovim'"
+        ]
+    }
+}

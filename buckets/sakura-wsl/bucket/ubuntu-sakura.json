@@ -1,0 +1,25 @@
+{
+    "name": "ubuntu-sakura",
+    "version": "24.04",
+    "description": "Ubuntu 24.04 LTS - Sakura's custom Ubuntu with dev tools pre-installed",
+    "homepage": "https://ubuntu.com",
+    "license": "GPL-2.0",
+    "url": "https://cloud-images.ubuntu.com/wsl/noble/current/ubuntu-noble-wsl-amd64-ubuntu24.04lts.rootfs.tar.gz",
+    "hash": "",
+    "nonportable": true,
+    "wsl": true,
+    "wsl_name": "Ubuntu-Sakura",
+    "wsl_version": 2,
+    "installer": {
+        "type": "wsl",
+        "post_install": [
+            "wsl --set-version Ubuntu-Sakura 2",
+            "wsl -d Ubuntu-Sakura -- bash -c 'apt update && apt upgrade -y && apt install -y curl wget git build-essential python3 python3-pip nodejs npm vim neovim'",
+            "wsl -d Ubuntu-Sakura -- bash -c 'curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main\" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && apt update && apt install -y gh'"
+        ]
+    },
+    "checkver": {
+        "url": "https://cloud-images.ubuntu.com/wsl/noble/current/",
+        "regex": "ubuntu-noble-wsl-amd64-ubuntu(\\d+\\.\\d+)"
+    }
+}

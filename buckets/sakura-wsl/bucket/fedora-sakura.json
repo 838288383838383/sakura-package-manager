@@ -1,0 +1,24 @@
+{
+    "name": "fedora-sakura",
+    "version": "40",
+    "description": "Fedora 40 - Sakura's custom Fedora with modern Linux tools",
+    "homepage": "https://getfedora.org",
+    "license": "GPL-2.0",
+    "url": "https://github.com/WhiredTurningPoint/Fedora-WSL/releases/latest/download/fedora.tar.gz",
+    "hash": "",
+    "nonportable": true,
+    "wsl": true,
+    "wsl_name": "Fedora-Sakura",
+    "wsl_version": 2,
+    "installer": {
+        "type": "wsl",
+        "post_install": [
+            "wsl --set-version Fedora-Sakura 2",
+            "wsl -d Fedora-Sakura -- bash -c 'dnf update -y && dnf groupinstall -y \"Development Tools\" && dnf install -y curl wget git nodejs npm python3 python3-pip vim neovim'"
+        ]
+    },
+    "checkver": {
+        "url": "https://github.com/WhiredTurningPoint/Fedora-WSL/releases",
+        "regex": "([\\d]+)"
+    }
+}

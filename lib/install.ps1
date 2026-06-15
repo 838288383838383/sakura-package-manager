@@ -54,6 +54,38 @@ function Install-SakuraApp {
     Write-SakuraInfo "Found: $($manifest.name) v$($manifest.version)"
     Write-SakuraInfo "$($manifest.description)"
 
+    # Handle WSL distros
+    if ($manifest.wsl) {
+        Write-SakuraProgress "Detected WSL distribution..."
+        $tarPath = Join-Path $Script:SakuraCache "$Name.tar.gz"
+
+        Write-SakuraProgress "Downloading distro..."
+        try {
+            $url = if ($manifest.url -is [array]) { $manifest.url[0] } else { $manifest.url }
+            $ProgressPreference = 'SilentlyContinue'
+            Invoke-WebRequest -Uri $url -OutFile $tarPath -UseBasicParsing
+            Write-SakuraSuccess "Downloaded."
+        } catch {
+            Write-SakuraError "Download failed: $_"
+            return
+        }
+
+        $postInstall = @()
+        if ($manifest.installer -and $manifest.installer.post_install) {
+            $postInstall = if ($manifest.installer.post_install -is [array]) {
+                $manifest.installer.post_install
+            } else {
+                @($manifest.instalyzer.post_install)
+            }
+        }
+
+        Install-WslDistro -Name $Name -DistroName $manifest.wsl_name -TarPath $tarPath -Version $manifest.wsl_version -PostInstall $postInstall
+
+        Remove-Item -Path $tarPath -Force -ErrorAction SilentlyContinue
+        Add-PetExperience -Amount 30 -Reason "Installed WSL distro: $Name"
+        return
+    }
+
     # Validate manifest
     if (-not (Test-SakuraManifest -AppName $Name -Manifest $manifest)) {
         Write-SakuraError "Invalid manifest for '$Name'."
