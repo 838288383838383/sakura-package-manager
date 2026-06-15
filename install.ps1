@@ -68,6 +68,14 @@ if (Test-Path "$SakuraSource\buckets\sakura-main\bucket") {
     Copy-Item -Path "$SakuraSource\buckets\sakura-main\bucket\*" -Destination "$InstallDir\buckets\sakura-main\bucket" -Force -ErrorAction SilentlyContinue
 }
 
+# Create langs bucket
+if (-not (Test-Path "$InstallDir\buckets\langs")) {
+    New-Item -ItemType Directory -Path "$InstallDir\buckets\langs" -Force | Out-Null
+}
+if (Test-Path "$SakuraSource\buckets\langs\bucket") {
+    Copy-Item -Path "$SakuraSource\buckets\langs\bucket\*" -Destination "$InstallDir\buckets\langs\bucket" -Force -ErrorAction SilentlyContinue
+}
+
 # Create default config
 $configPath = "$InstallDir\config.json"
 if (-not (Test-Path $configPath)) {

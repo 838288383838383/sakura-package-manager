@@ -76,6 +76,10 @@ function Copy-ToTarget {
         if (-not (Test-Path "$Target\buckets\sakura-main\bucket")) { cmd /c mkdir "$Target\buckets\sakura-main\bucket" 2>&1 | Out-Null }
         Copy-Item -Path "$src\buckets\sakura-main\bucket\*" -Destination "$Target\buckets\sakura-main\bucket" -Force -ErrorAction SilentlyContinue
     }
+    if (Test-Path "$src\buckets\langs\bucket") {
+        if (-not (Test-Path "$Target\buckets\langs\bucket")) { cmd /c mkdir "$Target\buckets\langs\bucket" 2>&1 | Out-Null }
+        Copy-Item -Path "$src\buckets\langs\bucket\*" -Destination "$Target\buckets\langs\bucket" -Force -ErrorAction SilentlyContinue
+    }
 
     # Cleanup temp
     Remove-Item -Recurse -Force $TmpExtract -ErrorAction SilentlyContinue
