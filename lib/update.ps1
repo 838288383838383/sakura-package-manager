@@ -179,6 +179,28 @@ function Update-SakuraSelf {
             return
         }
 
+        # Check remote version
+        $remoteVersion = "unknown"
+        $sakuraPs1 = Join-Path $src "bin\sakura.ps1"
+        if (Test-Path $sakuraPs1) {
+            $content = Get-Content -Path $sakuraPs1 -Raw
+            if ($content -match 'SakuraVersion\s*=\s*"(.+?)"') {
+                $remoteVersion = $Matches[1]
+            }
+        }
+
+        if ($remoteVersion -eq $SakuraVersion) {
+            Write-Host ""
+            Write-Host "  Already latest version! (v$SakuraVersion)" -ForegroundColor Green
+            Write-Host ""
+            Remove-Item -Recurse -Force $extractPath -ErrorAction SilentlyContinue
+            return
+        }
+
+        Write-Host ""
+        Write-Host "  Update available: v$SakuraVersion -> v$remoteVersion" -ForegroundColor Yellow
+        Write-Host ""
+
         # Backup
         $backupDir = Join-Path $env:TEMP "sakura_backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
         New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
