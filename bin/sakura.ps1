@@ -32,6 +32,7 @@ $SakuraVersion = "2.0.1"
 . "$SakuraRoot\lib\search.ps1"
 . "$SakuraRoot\lib\update.ps1"
 . "$SakuraRoot\lib\depends.ps1"
+. "$SakuraRoot\lib\train.ps1"
 
 # Load pet module
 Import-Module "$SakuraRoot\modules\SakuraPet\SakuraPet.psm1" -Force
@@ -83,8 +84,9 @@ function Show-Help {
     Write-Host "`n  Config Commands:" -ForegroundColor Yellow
     Write-Host "    config get/set/list            Manage configuration"
     Write-Host "`n  Other:" -ForegroundColor Yellow
-    Write-Host "    version                        Show version"
-    Write-Host "    help                           Show this help"
+    Write-Host "    sl                 All aboard! Choo choo! 🚂"
+    Write-Host "    version            Show version"
+    Write-Host "    help               Show this help"
     Write-Host ""
     Write-Host "  Examples:" -ForegroundColor Cyan
     Write-Host "    sak install git                Install from best source"
@@ -214,6 +216,9 @@ switch ($Command.ToLower()) {
     }
     { $_ -in @("version", "-v", "--version") } {
         Write-Host "Sakura Package Manager v$SakuraVersion (Blossom Edition)" -ForegroundColor Magenta
+    }
+    { $_ -in @("sl", "train", "choo") } {
+        Invoke-SakuraTrain
     }
     { $_ -in @("help", "-h", "--help", $null, "") } {
         Show-Help

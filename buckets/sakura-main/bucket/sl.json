@@ -1,0 +1,14 @@
+{
+    "name": "sl",
+    "version": "5.02",
+    "description": "Steam Locomotive - you typed ls wrong, here's a train!",
+    "homepage": "https://github.com/mtoyoda/sl",
+    "license": "Freeware",
+    "url": "https://github.com/mtoyoda/sl/archive/refs/tags/5.02.zip",
+    "hash": "",
+    "bin": ["sl.exe"],
+    "checkver": {
+        "url": "https://github.com/mtoyoda/sl/releases",
+        "regex": "([\\d.]+)"
+    }
+}
