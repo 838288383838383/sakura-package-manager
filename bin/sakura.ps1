@@ -104,6 +104,7 @@ function Show-Help {
     Write-Host "    sak install git                Install from best source"
     Write-Host "    sak install obsidian -viab nonportable  Install MSI/EXE version"
     Write-Host "    sak install vim -viab sakura-main       Force specific bucket"
+    Write-Host "    sak install rust -viab langs            Install from langs bucket"
     Write-Host ""
 }
 
