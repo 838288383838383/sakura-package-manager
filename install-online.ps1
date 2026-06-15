@@ -25,15 +25,47 @@ $isInstalled = Test-Path "$InstallDir\bin\sakura.ps1"
 # Check if already installed - update instead
 if ($isInstalled) {
     Write-Host "  Sakura is already installed!" -ForegroundColor Cyan
-    Write-Host "  Updating to latest version..." -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "  Choose update method:" -ForegroundColor Yellow
+    Write-Host "    [1] Git pull (requires git)" -ForegroundColor White
+    Write-Host "    [2] Download ZIP (always works)" -ForegroundColor White
+    Write-Host ""
+    $choice = Read-Host "  Select (1 or 2)"
     Write-Host ""
 
-    $gitDir = "$InstallDir"
-    if (Test-Path "$gitDir\.git") {
-        Push-Location $gitDir
-        git pull origin main 2>&1 | Out-Null
-        Pop-Location
-    } else {
+    if ($choice -eq "1") {
+        # Git method
+        $gitCheck = Get-Command git -ErrorAction SilentlyContinue
+        if (-not $gitCheck) {
+            Write-Host "  [ERR] Git not found. Use option 2 instead." -ForegroundColor Red
+            Write-Host ""
+            $choice = "2"
+        }
+    }
+
+    if ($choice -eq "1") {
+        Write-Host "  Updating via git pull..." -ForegroundColor Cyan
+        try {
+            $ProgressPreference = 'SilentlyContinue'
+            if (Test-Path "$InstallDir\.git") {
+                Push-Location $InstallDir
+                git pull origin main 2>&1 | Out-Null
+                Pop-Location
+            } else {
+                # Clone fresh
+                Remove-Item -Recurse -Force $InstallDir -ErrorAction SilentlyContinue
+                git clone https://github.com/838288383838383/sakura-package-manager.git $InstallDir 2>&1 | Out-Null
+            }
+            Write-Host "  Updated via git!" -ForegroundColor Green
+        } catch {
+            Write-Host "  [ERR] Git failed: $_" -ForegroundColor Red
+            Write-Host "  Falling back to download method..." -ForegroundColor Yellow
+            $choice = "2"
+        }
+    }
+
+    if ($choice -eq "2") {
+        # Download method
         Write-Host "  Downloading update..." -ForegroundColor Cyan
         $ProgressPreference = 'SilentlyContinue'
         try {
@@ -51,6 +83,17 @@ if ($isInstalled) {
         }
         Remove-Item -Path $ZipPath -Force -ErrorAction SilentlyContinue
     }
+
+    # ALWAYS recreate shims with -NoProfile
+    Write-Host "  Recreating shims..." -ForegroundColor Cyan
+    $sakuraCmd = "$InstallDir\bin\sakura.ps1"
+    $sakuraShim = "$InstallDir\shims\sakura.cmd"
+    $sakContent = @"
+@echo off
+powershell -NoProfile -ExecutionPolicy Bypass -File "$sakuraCmd" %*
+"@
+    Set-Content -Path $sakuraShim -Value $sakContent -Encoding ASCII
+    Copy-Item -Path $sakuraShim -Destination "$InstallDir\shims\sak.cmd" -Force
 
     Write-Host ""
     Write-Host "  Sakura updated successfully!" -ForegroundColor Green
