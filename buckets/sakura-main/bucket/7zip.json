@@ -1,0 +1,22 @@
+{
+    "name": "7zip",
+    "version": "24.05",
+    "description": "File archiver with extremely high compression ratio",
+    "homepage": "https://7-zip.org",
+    "license": "LGPL-2.1",
+    "url": "https://7-zip.org/a/7z2405-x64.exe",
+    "hash": "",
+    "bin": ["7z.exe"],
+    "checkver": {
+        "url": "https://www.7-zip.org/download.html",
+        "regex": "7-Zip ([\\d.]+)"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://7-zip.org/a/7z2405-x64.exe"
+        },
+        "32bit": {
+            "url": "https://7-zip.org/a/7z2405.exe"
+        }
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "name": "git",
+    "version": "2.45.0",
+    "description": "Distributed version control system",
+    "homepage": "https://git-scm.com",
+    "license": "GPL-2.0",
+    "url": "https://github.com/git-for-windows/git/releases/download/v2.45.0.windows.1/Git-2.45.0-64-bit.exe",
+    "hash": "",
+    "bin": ["bin\\git.exe", "bin\\gitk.exe"],
+    "checkver": {
+        "url": "https://github.com/git-for-windows/git/releases",
+        "regex": "v([\\d.]+)\\.windows"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/git-for-windows/git/releases/download/v2.45.0.windows.1/Git-2.45.0-64-bit.exe"
+        },
+        "32bit": {
+            "url": "https://github.com/git-for-windows/git/releases/download/v2.45.0.windows.1/Git-2.45.0-32-bit.exe"
+        }
+    }
+}

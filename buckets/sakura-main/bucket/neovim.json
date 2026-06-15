@@ -1,0 +1,15 @@
+{
+    "name": "neovim",
+    "version": "0.10.0",
+    "description": "Vim-fork focused on extensibility and usability",
+    "homepage": "https://neovim.io",
+    "license": "Apache-2.0",
+    "url": "https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-win64.zip",
+    "hash": "",
+    "extract_dir": "nvim-win64",
+    "bin": ["nvim.exe"],
+    "checkver": {
+        "url": "https://github.com/neovim/neovim/releases",
+        "regex": "v([\\d.]+)"
+    }
+}

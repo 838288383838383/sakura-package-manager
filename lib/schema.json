@@ -1,0 +1,156 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Sakura Package Manifest",
+    "description": "Schema for Sakura package manager app manifests",
+    "type": "object",
+    "required": ["name", "version", "url"],
+    "properties": {
+        "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9\\-]*$",
+            "description": "Unique package name (lowercase, hyphens allowed)"
+        },
+        "version": {
+            "type": "string",
+            "description": "Package version (semver recommended)"
+        },
+        "description": {
+            "type": "string",
+            "description": "Brief description of the package"
+        },
+        "homepage": {
+            "type": "string",
+            "format": "uri",
+            "description": "Project homepage URL"
+        },
+        "license": {
+            "type": "string",
+            "description": "Package license"
+        },
+        "url": {
+            "oneOf": [
+                { "type": "string", "format": "uri" },
+                { "type": "array", "items": { "type": "string", "format": "uri" } }
+            ],
+            "description": "Download URL(s)"
+        },
+        "hash": {
+            "type": "string",
+            "description": "SHA256 hash of the download file"
+        },
+        "hash_type": {
+            "type": "string",
+            "enum": ["sha256", "sha1", "md5"],
+            "default": "sha256"
+        },
+        "extract_dir": {
+            "type": "string",
+            "description": "Directory inside archive to extract"
+        },
+        "bin": {
+            "oneOf": [
+                { "type": "string" },
+                { "type": "array", "items": { "type": "string" } }
+            ],
+            "description": "Executable(s) to shim to PATH"
+        },
+        "shortcuts": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 4
+            },
+            "description": "Start menu shortcuts"
+        },
+        "dependencies": {
+            "oneOf": [
+                { "type": "string" },
+                { "type": "array", "items": { "type": "string" } }
+            ],
+            "description": "Package dependencies"
+        },
+        "pre_install": {
+            "type": ["string", "array"],
+            "description": "Script(s) to run before installation"
+        },
+        "post_install": {
+            "type": ["string", "array"],
+            "description": "Script(s) to run after installation"
+        },
+        "pre_uninstall": {
+            "type": ["string", "array"],
+            "description": "Script(s) to run before uninstallation"
+        },
+        "post_uninstall": {
+            "type": ["string", "array"],
+            "description": "Script(s) to run after uninstallation"
+        },
+        "env_add_path": {
+            "oneOf": [
+                { "type": "string" },
+                { "type": "array", "items": { "type": "string" } }
+            ],
+            "description": "Path(s) to add to PATH"
+        },
+        "env_set": {
+            "type": "object",
+            "additionalProperties": { "type": "string" },
+            "description": "Environment variables to set"
+        },
+        "architecture": {
+            "type": "object",
+            "properties": {
+                "32bit": { "$ref": "#/definitions/archConfig" },
+                "64bit": { "$ref": "#/definitions/archConfig" },
+                "arm64": { "$ref": "#/definitions/archConfig" }
+            }
+        },
+        "checkver": {
+            "type": "object",
+            "properties": {
+                "url": { "type": "string" },
+                "regex": { "type": "string" },
+                "jsonpath": { "type": "string" },
+                "xpath": { "type": "string" }
+            }
+        },
+        "autoupdate": {
+            "type": "object",
+            "properties": {
+                "url": { "type": "string" }
+            }
+        },
+        "persist": {
+            "oneOf": [
+                { "type": "string" },
+                { "type": "array", "items": { "type": "string" } }
+            ],
+            "description": "Files/dirs to persist across updates"
+        },
+        "suggest": {
+            "type": "object",
+            "additionalProperties": { "type": "string" },
+            "description": "Suggested complementary packages"
+        }
+    },
+    "definitions": {
+        "archConfig": {
+            "type": "object",
+            "properties": {
+                "url": { "oneOf": [{ "type": "string" }, { "type": "array" }] },
+                "hash": { "type": "string" },
+                "bin": { "oneOf": [{ "type": "string" }, { "type": "array" }] },
+                "extract_dir": { "type": "string" },
+                "installer": {
+                    "type": "object",
+                    "properties": {
+                        "file": { "type": "string" },
+                        "script": { "type": "string" },
+                        "args": { "type": "array", "items": { "type": "string" } }
+                    }
+                }
+            }
+        }
+    }
+}

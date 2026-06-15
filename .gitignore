@@ -1,0 +1,32 @@
+# Sakura Package Manager
+
+# User data (don't track)
+.sakura/apps/
+.sakura/shims/
+.sakura/cache/
+.sakura/persist/
+.sakura/data/
+.sakura/pet/
+.sakura/config.json
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Downloaded archives
+*.zip
+*.7z
+*.exe
+*.msi
+
+# Temp files
+*.tmp
+*.log

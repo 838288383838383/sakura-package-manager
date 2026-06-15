@@ -1,0 +1,14 @@
+{
+    "name": "vim",
+    "version": "9.1.0",
+    "description": "Vi Improved - text editor",
+    "homepage": "https://www.vim.org",
+    "license": "VIM",
+    "url": "https://github.com/vim/vim-win32-installer/releases/download/v9.1.0000/vim-9.1.0000-x64.zip",
+    "hash": "",
+    "bin": ["vim.exe", "gvim.exe", "xxd.exe"],
+    "checkver": {
+        "url": "https://github.com/vim/vim-win32-installer/releases",
+        "regex": "v([\\d.]+)"
+    }
+}
