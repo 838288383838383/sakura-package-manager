@@ -8,7 +8,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$SakuraVersion = "2.0.1"
+$SakuraVersion = "2.0.2"
 
 Write-Host ""
 Write-Host "    S A K U R A   I N S T A L L E R" -ForegroundColor Magenta

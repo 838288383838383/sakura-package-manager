@@ -23,7 +23,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
 
 $ErrorActionPreference = "Stop"
 $SakuraRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
-$SakuraVersion = "2.0.1"
+$SakuraVersion = "2.0.2"
 
 # Load core libraries
 . "$SakuraRoot\lib\core.ps1"

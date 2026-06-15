@@ -147,7 +147,7 @@ Install-Shims -Target $HomeDir
 # Config
 $cfgPath = "$HomeDir\config.json"
 if (-not (Test-Path $cfgPath)) {
-    @{ version = "2.0.1"; default_bucket = "sakura-main"; use_isolated_path = $true; proxy = ""; last_update = (Get-Date).ToString("o") } | ConvertTo-Json | Set-Content -Path $cfgPath -Encoding UTF8
+    @{ version = "2.0.2"; default_bucket = "sakura-main"; use_isolated_path = $true; proxy = ""; last_update = (Get-Date).ToString("o") } | ConvertTo-Json | Set-Content -Path $cfgPath -Encoding UTF8
 }
 
 # Pet
@@ -163,7 +163,7 @@ if ($curPath -notlike "*$HomeDir\shims*") {
 }
 
 Write-Host ""
-Write-Host "  Sakura v2.0.1 installed!" -ForegroundColor Green
+Write-Host "  Sakura v2.0.2 installed!" -ForegroundColor Green
 Write-Host "    sak help    | sak pet    | sak install <app>" -ForegroundColor White
 Write-Host ""
 Start-Sleep -Seconds 3

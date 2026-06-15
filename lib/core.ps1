@@ -35,7 +35,7 @@ function Initialize-Sakura {
     $configPath = Join-Path $Script:SakuraHome "config.json"
     if (-not (Test-Path $configPath)) {
         $defaultConfig = @{
-            version = "2.0.1"
+            version = "2.0.2"
             default_bucket = "sakura-main"
             use_isolated_path = $true
             proxy = ""
@@ -104,7 +104,7 @@ function Write-SakuraLogo {
     echo     ███████║██║  ██║██║  ██║██████╔╝██║  ██║   ██║   
     echo     ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═╝   ╚═╝   
     echo.
-    echo     Blossom Edition v2.0.1
+    echo     Blossom Edition v2.0.2
     echo.
 "@
     Write-Host $logo -ForegroundColor Magenta
