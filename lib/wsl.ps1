@@ -11,8 +11,8 @@ function Install-WslDistro {
     )
 
     Write-Host ""
-    Write-Host "  🐧 Installing WSL Distribution: $DistroName" -ForegroundColor Cyan
-    Write-Host "  ═══════════════════════════════════════════════" -ForegroundColor DarkGray
+    Write-Host "  Installing WSL Distribution: $DistroName" -ForegroundColor Cyan
+    Write-Host "  ==========================================" -ForegroundColor DarkGray
 
     # Check if WSL is enabled
     $wslStatus = wsl --status 2>&1
@@ -99,7 +99,7 @@ wsl -d $DistroName %*
     Set-Content -Path $shimPath -Value $shimContent -Encoding ASCII
 
     Write-Host ""
-    Write-Host "  ✅ $DistroName installed!" -ForegroundColor Green
+    Write-Host "  OK: $DistroName installed!" -ForegroundColor Green
     Write-Host ""
     Write-Host "  Launch with:" -ForegroundColor Yellow
     Write-Host "    wsl -d $DistroName" -ForegroundColor White
@@ -111,7 +111,7 @@ function Uninstall-WslDistro {
     param([string]$DistroName)
 
     Write-Host ""
-    Write-Host "  🐧 Uninstalling WSL Distribution: $DistroName" -ForegroundColor Yellow
+    Write-Host "  Uninstalling WSL Distribution: $DistroName" -ForegroundColor Yellow
 
     $existing = wsl --list --quiet 2>&1 | Select-String $DistroName
     if (-not $existing) {
@@ -136,8 +136,8 @@ function Uninstall-WslDistro {
 
 function Show-WslDistros {
     Write-Host ""
-    Write-Host "  🐧 Installed WSL Distributions:" -ForegroundColor Cyan
-    Write-Host "  ═════════════════════════════════" -ForegroundColor DarkGray
+    Write-Host "  Installed WSL Distributions:" -ForegroundColor Cyan
+    Write-Host "  -----------------------------" -ForegroundColor DarkGray
 
     $distros = wsl --list --verbose 2>&1
     if ($distros -match "There are no installed distributions") {

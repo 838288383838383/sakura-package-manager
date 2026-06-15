@@ -27,59 +27,12 @@ function Invoke-SakuraTrain {
         "  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  ="
     )
 
-    if ($A -or $L) {
-        $train = @(
-            "                                        (@@)               (@@)               (@@)"
-            "                                       (@@)             (@@@)             (@@@)"
-            "                                     (@@@)            (@@@@@)           (@@@@@)"
-            "                                    (@@@@)           (@@@@@@@)         (@@@@@@@)"
-            "                                   (@@@@@)          (@@@@@@@@@)       (@@@@@@@@@)"
-            "                                  (@@@@@@@)        (@@@@@@@@@@@)     (@@@@@@@@@@@)"
-            "                                 (@@@@@@@@@)      (@@@@@@@@@@@@@)   (@@@@@@@@@@@@@)"
-            "                                (@@@@@@@@@@@)    (@@@@@@@@@@@@@@@) (@@@@@@@@@@@@@@@)"
-            "                                (@@@@@@@@@@@)   (@@@@@@@@@@@@@@@@@)(@@@@@@@@@@@@@@@)"
-            "                               (@@@@@@@@@@@@@) (@@@@@@@@@@@@@@@@@@)(@@@@@@@@@@@@@@@)"
-            "  _  _  _  _  _  _  _  _  _  _ (_@@@@@@@@@@@@@)(@@@@@@@@@@@@@@@@@)(@@@@@@@@@@@@@@@)"
-            "  |/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|/ \|"
-            "  ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^"
-            "  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  ="
-        )
-    }
-
     $width = $Host.UI.RawUI.WindowSize.Width
     $height = $Host.UI.RawUI.WindowSize.Height
-
-    # Train cars that pass by
-    $cars = @(
-        "  ===  ___  ___  ___  ==="
-        "  === |   ||   ||   | ==="
-        "  === |___||___||___| ==="
-        "  ===  === === ===  ==="
-        "  === [][][][][][]  ==="
-    )
-
-    # Smoke particles
-    $smoke = @(
-        "    ,~."
-        "   (  ) "
-        "   () "
-        "    `~."
-        "       `~."
-    )
 
     # Animate the train
     for ($pos = -$train[0].Length; $pos -lt ($width + 20); $pos += 2) {
         Clear-Host
-
-        # Draw smoke
-        if ($pos -gt 0 -and $pos -lt ($width - 20)) {
-            $smokeX = $pos + 10
-            for ($s = 0; $s -lt $smoke.Count; $s++) {
-                $sY = [Math]::Max(0, [Math]::Min($height - 5, 2 + $s))
-                $sX = [Math]::Max(0, [Math]::Min($width - $smoke[$s].Length, $smokeX - $s * 2))
-                Write-Host -NoNewline "`e[${sY};${sX}H$($smoke[$s])" -ForegroundColor DarkGray
-            }
-        }
 
         # Draw train
         for ($i = 0; $i -lt $train.Count; $i++) {
@@ -90,26 +43,24 @@ function Invoke-SakuraTrain {
                 if ($x + $line.Length -gt $width) {
                     $line = $line.Substring(0, [Math]::Max(0, $width - $x))
                 }
-                Write-Host -NoNewline "`e[${y};${x}H$line" -ForegroundColor Yellow
+                Write-Host -NoNewline ("`e[{0};{1}H" -f $y, $x) -ForegroundColor Yellow
+                Write-Host -NoNewline $line -ForegroundColor Yellow
             }
         }
-
-        # Draw wheels animation
-        $wheelFrame = if (($pos / 2) % 2 -eq 0) { "O" } else { "o" }
 
         Start-Sleep -Milliseconds 50
     }
 
     # Final message
     Write-Host ""
-    Write-Host "  🚂 Choo choo! You meant 'ls' not 'sl'!" -ForegroundColor Yellow
+    Write-Host "  Choo choo! You meant 'ls' not 'sl'!" -ForegroundColor Yellow
     Write-Host ""
 }
 
 function Show-SakuraTrainHelp {
     Write-Host ""
-    Write-Host "  🚂 Sakura Train - Built-in Steam Locomotive" -ForegroundColor Yellow
-    Write-Host "  ════════════════════════════════════════════" -ForegroundColor DarkGray
+    Write-Host "  Sakura Train - Built-in Steam Locomotive" -ForegroundColor Yellow
+    Write-Host "  =========================================" -ForegroundColor DarkGray
     Write-Host ""
     Write-Host "  Usage: sl [options]" -ForegroundColor Cyan
     Write-Host ""
@@ -119,6 +70,6 @@ function Show-SakuraTrainHelp {
     Write-Host "    -A    Show all (locomotive + cars)" -ForegroundColor DarkGray
     Write-Host "    -W    Show warning" -ForegroundColor DarkGray
     Write-Host ""
-    Write-Host "  Tip: Type 'sl' instead of 'ls' and see what happens! 🎉" -ForegroundColor Magenta
+    Write-Host "  Tip: Type 'sl' instead of 'ls' and see what happens!" -ForegroundColor Magenta
     Write-Host ""
 }

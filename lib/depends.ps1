@@ -71,7 +71,7 @@ function Show-DependencyTree {
     }
 
     $indent = "    " * $Depth
-    $marker = if ($Depth -eq 0) { "" } else { "├── " }
+    $marker = if ($Depth -eq 0) { "" } else { "|-- " }
 
     if ($Visited.Contains($AppName)) {
         Write-Host "$indent$marker$AppName (already shown)" -ForegroundColor DarkGray
@@ -81,7 +81,7 @@ function Show-DependencyTree {
     $Visited.Add($AppName) | Out-Null
 
     $installed = Test-Path (Join-Path $Script:SakuraApps $AppName)
-    $status = if ($installed) { "✓" } else { "✗" }
+    $status = if ($installed) { "[OK]" } else { "[--]" }
     $color = if ($installed) { "Green" } else { "Red" }
 
     Write-Host "$indent$marker$status $AppName" -ForegroundColor $color

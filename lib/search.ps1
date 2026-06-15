@@ -5,7 +5,7 @@ function Search-SakuraPackages {
 
     Write-Host ""
     Write-Host "  Searching for: $Query" -ForegroundColor Cyan
-    Write-Host "  ─────────────────────" -ForegroundColor DarkGray
+    Write-Host "  ---------------------" -ForegroundColor DarkGray
 
     $results = Search-SakuraBuckets -Query $Query
 
@@ -16,12 +16,12 @@ function Search-SakuraPackages {
     }
 
     Write-Host ""
-    Write-Host "    Name        Bucket         Version   Description" -ForegroundColor Yellow
-    Write-Host "    ────        ──────         ───────   ───────────" -ForegroundColor DarkGray
+    Write-Host "    Name          Bucket          Version   Description" -ForegroundColor Yellow
+    Write-Host "    ----          ------          -------   -----------" -ForegroundColor DarkGray
 
     foreach ($result in $results) {
-        $name = $result.Name.PadRight(13)
-        $bucket = $result.Bucket.PadRight(15)
+        $name = $result.Name.PadRight(14)
+        $bucket = $result.Bucket.PadRight(16)
         $version = $result.Version.PadRight(10)
         $desc = if ($result.Description.Length -gt 40) {
             $result.Description.Substring(0, 37) + "..."
@@ -58,7 +58,7 @@ function Show-SakuraAppInfo {
 
     Write-Host ""
     Write-Host "  $($manifest.name)" -ForegroundColor Magenta
-    Write-Host "  ════════════════════════════════════════" -ForegroundColor DarkGray
+    Write-Host "  ========================================" -ForegroundColor DarkGray
     Write-Host "  Version:       $($manifest.version)" -ForegroundColor White
     Write-Host "  Description:   $($manifest.description)" -ForegroundColor White
     if ($manifest.homepage) {

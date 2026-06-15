@@ -1,23 +1,15 @@
-# 🌸 Sakura Package Manager - Remote Installer
+# Sakura Package Manager - Remote Installer
 # Run with: irm https://raw.githubusercontent.com/838288383838383/sakura-package-manager/main/install-online.ps1 | iex
 
 $ErrorActionPreference = "Stop"
 
 Write-Host ""
-Write-Host "    🌸 S A K U R A   I N S T A L L E R 🌸" -ForegroundColor Magenta
-Write-Host "    ════════════════════════════════════════" -ForegroundColor DarkGray
+Write-Host "    S A K U R A   I N S T A L L E R" -ForegroundColor Magenta
+Write-Host "    ==================================" -ForegroundColor DarkGray
 Write-Host ""
 
 # Bypass execution policy (like Scoop)
-$currentPolicy = Get-ExecutionPolicy -Scope CurrentUser
-if ($currentPolicy -ne "RemoteSigned" -and $currentPolicy -ne "Unrestricted" -and $currentPolicy -ne "Bypass") {
-    Write-Host "  Setting execution policy..." -ForegroundColor Cyan
-    try {
-        Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-    } catch {
-        Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
-    }
-}
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
 
 # Check PowerShell version
 if ($PSVersionTable.PSVersion.Major -lt 5) {
@@ -36,14 +28,12 @@ if ($isInstalled) {
     Write-Host "  Updating to latest version..." -ForegroundColor Cyan
     Write-Host ""
 
-    # Pull latest from GitHub
     $gitDir = "$InstallDir"
     if (Test-Path "$gitDir\.git") {
         Push-Location $gitDir
         git pull origin main 2>&1 | Out-Null
         Pop-Location
     } else {
-        # Download and extract
         Write-Host "  Downloading update..." -ForegroundColor Cyan
         $ProgressPreference = 'SilentlyContinue'
         try {
@@ -67,8 +57,8 @@ if ($isInstalled) {
     Write-Host "    sak help          Show help" -ForegroundColor White
     Write-Host "    sak install git   Install an app" -ForegroundColor White
     Write-Host ""
-    Write-Host "  Pet your companion: sak pet" -ForegroundColor Magenta
-    Write-Host ""
+    Write-Host "  Closing in 5 seconds..." -ForegroundColor DarkGray
+    Start-Sleep -Seconds 5
     exit 0
 }
 
@@ -96,7 +86,6 @@ Expand-Archive -Path $ZipPath -DestinationPath $InstallDir -Force
 # Move files from extracted folder
 $extractedDir = Join-Path $InstallDir "sakura-package-manager-main"
 if (Test-Path $extractedDir) {
-    # Copy all files
     Copy-Item -Path "$extractedDir\*" -Destination $InstallDir -Recurse -Force
     Remove-Item -Path $extractedDir -Recurse -Force -ErrorAction SilentlyContinue
 }
@@ -164,7 +153,7 @@ if ($currentPath -notlike "*$InstallDir\shims*") {
 }
 
 Write-Host ""
-Write-Host "  ✅ Sakura v2.0.1 installed successfully!" -ForegroundColor Green
+Write-Host "  Sakura v2.0.1 installed successfully!" -ForegroundColor Green
 Write-Host ""
 Write-Host "  Usage:" -ForegroundColor Yellow
 Write-Host "    Open a NEW terminal, then:" -ForegroundColor White
@@ -172,6 +161,9 @@ Write-Host "    sak help          Show help" -ForegroundColor White
 Write-Host "    sak pet           Meet your companion!" -ForegroundColor White
 Write-Host "    sak install git   Install an app" -ForegroundColor White
 Write-Host ""
-Write-Host "  🌸 Your pet Sakura-chan is waiting!" -ForegroundColor Magenta
-Write-Host "     Run 'sak pet' to say hello!" -ForegroundColor Magenta
+Write-Host "  Your pet Sakura-chan is waiting!" -ForegroundColor Magenta
+Write-Host "  Run 'sak pet' to say hello!" -ForegroundColor Magenta
 Write-Host ""
+Write-Host "  Closing in 5 seconds..." -ForegroundColor DarkGray
+Start-Sleep -Seconds 5
+exit

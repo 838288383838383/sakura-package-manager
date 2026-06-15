@@ -9,12 +9,12 @@ function Install-SakuraApp {
 
     Write-Host ""
     Write-Host "  Installing $Name..." -ForegroundColor Magenta
-    Write-Host "  ─────────────────" -ForegroundColor DarkGray
+    Write-Host "  -------------------" -ForegroundColor DarkGray
 
     # Check if already installed
     $installedPath = Join-Path $Script:SakuraApps $Name
     if (Test-Path $installedPath) {
-        Write-SakuraWarning "'$Name' is already installed. Use 'sakura update $Name' to update."
+        Write-SakuraWarning "$Name is already installed. Use 'sakura update $Name' to update."
         return
     }
 
@@ -75,7 +75,7 @@ function Install-SakuraApp {
             $postInstall = if ($manifest.installer.post_install -is [array]) {
                 $manifest.installer.post_install
             } else {
-                @($manifest.instalyzer.post_install)
+                @($manifest.installer.post_install)
             }
         }
 
@@ -113,7 +113,8 @@ function Install-SakuraApp {
     }
 
     # Download
-    $downloadPath = Join-Path $Script:SakuraCache "$Name.$([System.IO.Path]::GetExtension($manifest.url))"
+    $ext = [System.IO.Path]::GetExtension($manifest.url)
+    $downloadPath = Join-Path $Script:SakuraCache "$Name$ext"
 
     Write-SakuraProgress "Downloading..."
     try {
@@ -147,9 +148,8 @@ function Install-SakuraApp {
         if (-not $installer) { $installer = @{} }
 
         $installType = if ($installer.type) { $installer.type } else {
-            # Auto-detect from URL extension
-            $ext = [System.IO.Path]::GetExtension($downloadPath).ToLower()
-            switch ($ext) {
+            $ext2 = [System.IO.Path]::GetExtension($downloadPath).ToLower()
+            switch ($ext2) {
                 ".msi" { "msi" }
                 ".exe" { "exe" }
                 default { "exe" }
@@ -221,7 +221,6 @@ function Install-SakuraApp {
         if ($manifest.bin) {
             $bins = if ($manifest.bin -is [array]) { $manifest.bin } else { @($manifest.bin) }
             foreach ($bin in $bins) {
-                # Check common install locations
                 $locations = @(
                     $installDir,
                     "${env:ProgramFiles}\$Name",
@@ -238,7 +237,6 @@ function Install-SakuraApp {
                     }
                 }
                 if (-not $found) {
-                    # Try searching Program Files
                     $searchResult = Get-ChildItem -Path "${env:ProgramFiles}" -Recurse -Filter $bin -ErrorAction SilentlyContinue | Select-Object -First 1
                     if ($searchResult) {
                         New-SakuraShim -AppName $Name -BinPath $searchResult.FullName -ShimName ([System.IO.Path]::GetFileNameWithoutExtension($bin))
@@ -307,10 +305,9 @@ function Install-SakuraApp {
     # Handle setup prompts
     if ($manifest.setup_prompts) {
         Write-Host ""
-        Write-Host "  ⚙️  Setup Options:" -ForegroundColor Cyan
+        Write-Host "  Setup Options:" -ForegroundColor Cyan
         $setupAnswers = @{}
         foreach ($prompt in $manifest.setup_prompts) {
-            # Check if prompt requires a specific app/version
             if ($prompt.requires) {
                 $reqApp = $prompt.requires.app
                 $reqVer = $prompt.requires.min_version
@@ -339,7 +336,7 @@ function Install-SakuraApp {
                     Write-Host "  $($prompt.question)" -ForegroundColor Yellow
                     for ($i = 0; $i -lt $prompt.options.Count; $i++) {
                         $opt = $prompt.options[$i]
-                        $marker = if ($i -eq 0) { "→" } else { " " }
+                        $marker = if ($i -eq 0) { ">>" } else { "  " }
                         Write-Host "  $marker [$($i+1)] $($opt.label) - $($opt.description)" -ForegroundColor White
                     }
                     $default = if ($prompt.default) { $prompt.default } else { "1" }
@@ -411,8 +408,8 @@ function Install-SakuraApp {
     $stats | ConvertTo-Json | Set-Content -Path $statsFile -Encoding UTF8
 
     Write-Host ""
-    Write-Host "  ✅ $Name v$($manifest.version) installed successfully!" -ForegroundColor Green
-    Write-Host "  🌸 Your pet gained 25 experience!" -ForegroundColor Magenta
+    Write-Host "  OK: $Name v$($manifest.version) installed successfully!" -ForegroundColor Green
+    Write-Host "  Your pet gained 25 experience!" -ForegroundColor Magenta
     Write-Host ""
 }
 
@@ -421,7 +418,7 @@ function Uninstall-SakuraApp {
 
     $appPath = Join-Path $Script:SakuraApps $Name
     if (-not (Test-Path $appPath)) {
-        Write-SakuraError "'$Name' is not installed."
+        Write-SakuraError "$Name is not installed."
         return
     }
 
@@ -452,6 +449,6 @@ function Uninstall-SakuraApp {
     # Update pet
     Add-PetExperience -Amount 10 -Reason "Uninstalled $Name"
 
-    Write-Host "  ✅ $Name uninstalled successfully!" -ForegroundColor Green
+    Write-Host "  OK: $Name uninstalled successfully!" -ForegroundColor Green
     Write-Host ""
 }

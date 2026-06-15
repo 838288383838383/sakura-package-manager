@@ -7,7 +7,6 @@ $Script:PetDataPath = Join-Path (Split-Path -Parent (Split-Path -Parent $PSScrip
 $Script:PetSpecies = @{
     "sakura-spirit" = @{
         name = "Sakura Spirit"
-        emoji = "🌸"
         stages = @(
             @{ name = "bud";       min_level = 1;  max_level = 5;  art = @(
                 "    /\_/\\  ",
@@ -17,50 +16,50 @@ $Script:PetSpecies = @{
                 " (_|   |_)"
             )}
             @{ name = "sprout";    min_level = 6;  max_level = 15; art = @(
-                "    🌸     ",
-                "    |\\     ",
-                "   /||\\   ",
-                "  / |||\\  ",
-                "    |||    ",
-                "    |||    ",
-                "   /|||\\  ",
-                "  /_|||_\\ "
+                "    @     ",
+                "    |\\    ",
+                "   /||\\  ",
+                "  / |||\\ ",
+                "    |||   ",
+                "    |||   ",
+                "   /|||\\ ",
+                "  /_|||_\\"
             )}
             @{ name = "sapling";   min_level = 16; max_level = 30; art = @(
-                "   🌸🌸🌸  ",
-                "  🌸|||🌸  ",
-                "   \\|/     ",
-                "    |      ",
-                "    |      ",
-                "   /|\\    ",
-                "  / || \\  ",
-                "   /|||\\  ",
-                "  |_|||_|  "
+                "   @@@   ",
+                "  @|||@  ",
+                "   \\|/    ",
+                "    |     ",
+                "    |     ",
+                "   /|\\   ",
+                "  / || \\ ",
+                "   /|||\\ ",
+                "  |_|||_| "
             )}
             @{ name = "blossom";   min_level = 31; max_level = 50; art = @(
-                "  🌸🌸🌸🌸 ",
-                " 🌸🌸🌸🌸🌸",
-                "  \\🌸🌸🌸/ ",
-                "   \\|🌸|/  ",
+                "  @@@@  ",
+                " @@@@@@ ",
+                "  \\@@@/  ",
+                "   \\|@|/  ",
                 "    \\| |/  ",
                 "     \\|/   ",
                 "      |    ",
                 "     /|\\   ",
-                "    / || \\  ",
+                "    / || \\ ",
                 "   /_|||_\\ "
             )}
             @{ name = "elder";     min_level = 51; max_level = 999; art = @(
-                "  ✨🌸✨🌸✨",
-                " 🌸🌸🌸🌸🌸",
-                "🌸🌸🌸🌸🌸🌸",
-                "  \\🌸🌸🌸/ ",
-                "   \\|🌸|/  ",
-                "    \\| |/  ",
-                "     \\|/   ",
-                "      |    ",
-                "     /|\\   ",
-                "    / || \\  ",
-                "   /_|||_\\ "
+                " * @ * @ *",
+                " @@@@@@@@ ",
+                "@@@@@@@@@@",
+                "  \\@@@/   ",
+                "   \\|@|/   ",
+                "    \\| |/   ",
+                "     \\|/    ",
+                "      |     ",
+                "     /|\\    ",
+                "    / || \\   ",
+                "   /_|||_\\  "
             )}
         )
     }
@@ -68,31 +67,31 @@ $Script:PetSpecies = @{
 
 # Mood states
 $Script:PetMoods = @{
-    "ecstatic"  = @{ emoji = "🤩"; message = "is over the moon!"; color = "Yellow" }
-    "happy"     = @{ emoji = "😊"; message = "feels wonderful!"; color = "Green" }
-    "content"   = @{ emoji = "😌"; message = "feels content."; color = "Cyan" }
-    "neutral"   = @{ emoji = "😐"; message = "feels okay."; color = "White" }
-    "bored"     = @{ emoji = "😑"; message = "wants attention..."; color = "DarkYellow" }
-    "sad"       = @{ emoji = "😢"; message = "feels lonely."; color = "DarkCyan" }
-    "hungry"    = @{ emoji = "🍽️"; message = "is starving!"; color = "DarkRed" }
-    "tired"     = @{ emoji = "😴"; message = "needs rest..."; color = "DarkGray" }
-    "sick"      = @{ emoji = "🤒"; message = "doesn't feel well..."; color = "DarkMagenta" }
+    "ecstatic"  = @{ emoji = ":D"; message = "is over the moon!"; color = "Yellow" }
+    "happy"     = @{ emoji = ":)"; message = "feels wonderful!"; color = "Green" }
+    "content"   = @{ emoji = ":|"; message = "feels content."; color = "Cyan" }
+    "neutral"   = @{ emoji = "-";  message = "feels okay."; color = "White" }
+    "bored"     = @{ emoji = ":/"; message = "wants attention..."; color = "DarkYellow" }
+    "sad"       = @{ emoji = ":("; message = "feels lonely."; color = "DarkCyan" }
+    "hungry"    = @{ emoji = "D:"; message = "is starving!"; color = "DarkRed" }
+    "tired"     = @{ emoji = "zZ"; message = "needs rest..."; color = "DarkGray" }
+    "sick"      = @{ emoji = "~_~"; message = "doesn't feel well..."; color = "DarkMagenta" }
 }
 
 # Achievements
 $Script:Achievements = @{
-    "first_install"   = @{ name = "First Steps";       desc = "Install your first app";      icon = "🎯" }
-    "ten_installs"    = @{ name = "Collector";          desc = "Install 10 apps";             icon = "📦" }
-    "hundred_installs"= @{ name = "Package Master";    desc = "Install 100 apps";            icon = "👑" }
-    "first_evolution" = @{ name = "Growing Up";         desc = "Evolve your pet once";        icon = "🌱" }
-    "five_evolutions" = @{ name = "Ancient One";        desc = "Evolve 5 times";              icon = "🌳" }
-    "daily_user"      = @{ name = "Daily Devotee";     desc = "Use Sakura 7 days in a row";  icon = "📅" }
-    "night_owl"       = @{ name = "Night Owl";         desc = "Install an app after midnight";icon = "🦉" }
-    "early_bird"      = @{ name = "Early Bird";         desc = "Install an app before 7 AM";  icon = "🐦" }
-    "max_happiness"   = @{ name = "Pure Joy";           desc = "Reach max happiness";         icon = "💖" }
-    "first_pet"       = @{ name = "Animal Lover";       desc = "Pet your companion";          icon = "🐾" }
-    "hungry_master"   = @{ name = "Master Feeder";      desc = "Feed 50 times";               icon = "🍽️" }
-    "playful"         = @{ name = "Playtime!";           desc = "Play 50 times";               icon = "🎮" }
+    "first_install"   = @{ name = "First Steps";       desc = "Install your first app";      icon = "[1st]" }
+    "ten_installs"    = @{ name = "Collector";          desc = "Install 10 apps";             icon = "[10]" }
+    "hundred_installs"= @{ name = "Package Master";    desc = "Install 100 apps";            icon = "[100]" }
+    "first_evolution" = @{ name = "Growing Up";         desc = "Evolve your pet once";        icon = "[Evo]" }
+    "five_evolutions" = @{ name = "Ancient One";        desc = "Evolve 5 times";              icon = "[Anc]" }
+    "daily_user"      = @{ name = "Daily Devotee";     desc = "Use Sakura 7 days in a row";  icon = "[Day]" }
+    "night_owl"       = @{ name = "Night Owl";         desc = "Install an app after midnight";icon = "[Owl]" }
+    "early_bird"      = @{ name = "Early Bird";         desc = "Install an app before 7 AM";  icon = "[Brd]" }
+    "max_happiness"   = @{ name = "Pure Joy";           desc = "Reach max happiness";         icon = "[Joy]" }
+    "first_pet"       = @{ name = "Animal Lover";       desc = "Pet your companion";          icon = "[Pet]" }
+    "hungry_master"   = @{ name = "Master Feeder";      desc = "Feed 50 times";               icon = "[Fdr]" }
+    "playful"         = @{ name = "Playtime!";           desc = "Play 50 times";               icon = "[Ply]" }
 }
 
 function Get-PetFilePath {
@@ -211,37 +210,38 @@ function Show-Pet {
     Save-PetData -PetData $pet
 
     Write-Host ""
-    Write-Host "  ╔═══════════════════════════════════════════════╗" -ForegroundColor Magenta
-    Write-Host "  ║          🌸 Your Digital Companion 🌸         ║" -ForegroundColor Magenta
-    Write-Host "  ╠═══════════════════════════════════════════════╣" -ForegroundColor Magenta
-    Write-Host "  ║                                               ║" -ForegroundColor Magenta
+    Write-Host "  +-----------------------------------------------+" -ForegroundColor Magenta
+    Write-Host "  |          Your Digital Companion               |" -ForegroundColor Magenta
+    Write-Host "  +-----------------------------------------------+" -ForegroundColor Magenta
+    Write-Host "  |                                               |" -ForegroundColor Magenta
 
     # Draw pet art
     foreach ($line in $stage.art) {
-        Write-Host "  ║  $line$((' ' * [Math]::Max(0, 43 - $line.Length - 3)))║" -ForegroundColor Magenta
+        $padding = ' ' * [Math]::Max(0, 43 - $line.Length)
+        Write-Host "  |  $line$padding|" -ForegroundColor Magenta
     }
 
-    Write-Host "  ║                                               ║" -ForegroundColor Magenta
-    Write-Host "  ╠═══════════════════════════════════════════════╣" -ForegroundColor Magenta
-    Write-Host "  ║  Name:       $($pet.name.PadRight(30)) ║" -ForegroundColor White
-    Write-Host "  ║  Species:    $($pet.species.PadRight(30)) ║" -ForegroundColor White
-    Write-Host "  ║  Stage:      $($stage.name.PadRight(30)) ║" -ForegroundColor White
-    Write-Host "  ║  Level:      $($pet.level.ToString().PadRight(30)) ║" -ForegroundColor Yellow
-    Write-Host "  ║  Mood:       $($mood.emoji) $($pet.mood.PadRight(28)) ║" -ForegroundColor $mood.color
-    Write-Host "  ╠═══════════════════════════════════════════════╣" -ForegroundColor Magenta
-    Write-Host "  ║  EXP:        $($pet.experience)/$($pet.exp_to_next)$((' ' * [Math]::Max(0, 28 - $pet.experience.ToString().Length - $pet.exp_to_next.ToString().Length)))║" -ForegroundColor Cyan
-    Write-Host "  ║  Hunger:     $(Get-StatBar $pet.hunger) $(($pet.hunger).ToString().PadRight(3))% ║" -ForegroundColor $(if ($pet.hunger -lt 30) { "Red" } else { "Green" })
-    Write-Host "  ║  Energy:     $(Get-StatBar $pet.energy) $(($pet.energy).ToString().PadRight(3))% ║" -ForegroundColor $(if ($pet.energy -lt 30) { "Red" } else { "Yellow" })
-    Write-Host "  ║  Happiness:  $(Get-StatBar $pet.happiness) $(($pet.happiness).ToString().PadRight(3))% ║" -ForegroundColor $(if ($pet.happiness -lt 30) { "Red" } else { "Magenta" })
-    Write-Host "  ║  Clean:      $(Get-StatBar $pet.cleanliness) $(($pet.cleanliness).ToString().PadRight(3))% ║" -ForegroundColor $(if ($pet.cleanliness -lt 30) { "Red" } else { "Cyan" })
-    Write-Host "  ║  Health:     $(Get-StatBar $pet.health) $(($pet.health).ToString().PadRight(3))% ║" -ForegroundColor $(if ($pet.health -lt 30) { "Red" } else { "Green" })
-    Write-Host "  ╠═══════════════════════════════════════════════╣" -ForegroundColor Magenta
-    Write-Host "  ║  $($mood.message.PadRight(43)) ║" -ForegroundColor $mood.color
-    Write-Host "  ╚═══════════════════════════════════════════════╝" -ForegroundColor Magenta
+    Write-Host "  |                                               |" -ForegroundColor Magenta
+    Write-Host "  +-----------------------------------------------+" -ForegroundColor Magenta
+    Write-Host "  |  Name:       $($pet.name.PadRight(30)) |" -ForegroundColor White
+    Write-Host "  |  Species:    $($pet.species.PadRight(30)) |" -ForegroundColor White
+    Write-Host "  |  Stage:      $($stage.name.PadRight(30)) |" -ForegroundColor White
+    Write-Host "  |  Level:      $($pet.level.ToString().PadRight(30)) |" -ForegroundColor Yellow
+    Write-Host "  |  Mood:       $($mood.emoji) $($pet.mood.PadRight(28)) |" -ForegroundColor $mood.color
+    Write-Host "  +-----------------------------------------------+" -ForegroundColor Magenta
+    Write-Host "  |  EXP:        $($pet.experience)/$($pet.exp_to_next)$(' ' * [Math]::Max(0, 28 - $pet.experience.ToString().Length - $pet.exp_to_next.ToString().Length))|" -ForegroundColor Cyan
+    Write-Host "  |  Hunger:     $(Get-StatBar $pet.hunger) $(($pet.hunger).ToString().PadRight(3))% |" -ForegroundColor $(if ($pet.hunger -lt 30) { "Red" } else { "Green" })
+    Write-Host "  |  Energy:     $(Get-StatBar $pet.energy) $(($pet.energy).ToString().PadRight(3))% |" -ForegroundColor $(if ($pet.energy -lt 30) { "Red" } else { "Yellow" })
+    Write-Host "  |  Happiness:  $(Get-StatBar $pet.happiness) $(($pet.happiness).ToString().PadRight(3))% |" -ForegroundColor $(if ($pet.happiness -lt 30) { "Red" } else { "Magenta" })
+    Write-Host "  |  Clean:      $(Get-StatBar $pet.cleanliness) $(($pet.cleanliness).ToString().PadRight(3))% |" -ForegroundColor $(if ($pet.cleanliness -lt 30) { "Red" } else { "Cyan" })
+    Write-Host "  |  Health:     $(Get-StatBar $pet.health) $(($pet.health).ToString().PadRight(3))% |" -ForegroundColor $(if ($pet.health -lt 30) { "Red" } else { "Green" })
+    Write-Host "  +-----------------------------------------------+" -ForegroundColor Magenta
+    Write-Host "  |  $($mood.message.PadRight(43))|" -ForegroundColor $mood.color
+    Write-Host "  +-----------------------------------------------+" -ForegroundColor Magenta
     Write-Host ""
 
     # Show stats
-    Write-Host "  📊 Lifetime Stats:" -ForegroundColor Cyan
+    Write-Host "  Lifetime Stats:" -ForegroundColor Cyan
     Write-Host "    Apps Installed:    $($pet.total_installs)" -ForegroundColor White
     Write-Host "    Apps Updated:      $($pet.total_updates)" -ForegroundColor White
     Write-Host "    Searches Made:     $($pet.total_searches)" -ForegroundColor White
@@ -251,7 +251,7 @@ function Show-Pet {
 
     # Show achievements if any
     if ($pet.achievements.Count -gt 0) {
-        Write-Host "  🏆 Recent Achievements:" -ForegroundColor Yellow
+        Write-Host "  Recent Achievements:" -ForegroundColor Yellow
         $recentAch = $pet.achievements | Select-Object -Last 3
         foreach ($ach in $recentAch) {
             $achData = $Script:Achievements[$ach]
@@ -277,7 +277,7 @@ function Get-StatBar {
 
     $filled = [Math]::Floor($Percent / 10)
     $empty = 10 - $filled
-    return ("█" * $filled) + ("░" * $empty)
+    return ("|" * $filled) + ("." * $empty)
 }
 
 function Feed-Pet {
@@ -285,7 +285,8 @@ function Feed-Pet {
     if (-not $pet) { return }
 
     if ($pet.hunger -ge 100) {
-        Write-Host "`n  🌸 $($pet.name) is already full!" -ForegroundColor Cyan
+        Write-Host ""
+        Write-Host "  $($pet.name) is already full!" -ForegroundColor Cyan
         Write-Host ""
         return
     }
@@ -299,8 +300,8 @@ function Feed-Pet {
     Add-PetExperience -Amount 5 -Reason "Fed pet"
 
     Write-Host ""
-    Write-Host "  🍽️ Feeding $($pet.name)..." -ForegroundColor Green
-    Write-Host "  💕 $($pet.name) says: 'Yummy! Thank you!'" -ForegroundColor Magenta
+    Write-Host "  Feeding $($pet.name)..." -ForegroundColor Green
+    Write-Host "  $($pet.name) says: 'Yummy! Thank you!'" -ForegroundColor Magenta
     Write-Host ""
 
     Save-PetData -PetData $pet
@@ -311,7 +312,8 @@ function Play-Pet {
     if (-not $pet) { return }
 
     if ($pet.energy -lt 15) {
-        Write-Host "`n  😴 $($pet.name) is too tired to play..." -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "  $($pet.name) is too tired to play..." -ForegroundColor Yellow
         Write-Host "  Try letting them nap first with: sakura pet nap" -ForegroundColor DarkGray
         Write-Host ""
         return
@@ -339,9 +341,9 @@ function Play-Pet {
     $event = $events | Get-Random
 
     Write-Host ""
-    Write-Host "  🎮 Playing with $($pet.name)..." -ForegroundColor Cyan
-    Write-Host "  ✨ $($pet.name) $event" -ForegroundColor Magenta
-    Write-Host "  💕 Happiness +20, Energy -15" -ForegroundColor DarkGray
+    Write-Host "  Playing with $($pet.name)..." -ForegroundColor Cyan
+    Write-Host "  $($pet.name) $event" -ForegroundColor Magenta
+    Write-Host "  Happiness +20, Energy -15" -ForegroundColor DarkGray
     Write-Host ""
 
     Save-PetData -PetData $pet
@@ -362,14 +364,14 @@ function Pet-Pet {
     if (-not ($pet.achievements -contains "first_pet")) {
         $pet.achievements += "first_pet"
         Write-Host ""
-        Write-Host "  🏆 Achievement Unlocked: Animal Lover!" -ForegroundColor Yellow
+        Write-Host "  Achievement Unlocked: Animal Lover!" -ForegroundColor Yellow
         Write-Host ""
     }
 
     Write-Host ""
-    Write-Host "  🐾 Petting $($pet.name)..." -ForegroundColor Magenta
-    Write-Host "  💕 $($pet.name) purrs happily!" -ForegroundColor Magenta
-    Write-Host "  💖 Happiness +10, Cleanliness +5" -ForegroundColor DarkGray
+    Write-Host "  Petting $($pet.name)..." -ForegroundColor Magenta
+    Write-Host "  $($pet.name) purrs happily!" -ForegroundColor Magenta
+    Write-Host "  Happiness +10, Cleanliness +5" -ForegroundColor DarkGray
     Write-Host ""
 
     Save-PetData -PetData $pet
@@ -385,9 +387,9 @@ function Nap-Pet {
     $pet = Update-PetMood -Pet $pet
 
     Write-Host ""
-    Write-Host "  😴 $($pet.name) takes a nap..." -ForegroundColor Yellow
-    Write-Host "  💤 Zzz... Energy +40, Health +5" -ForegroundColor DarkGray
-    Write-Host "  💕 $($pet.name) feels refreshed!" -ForegroundColor Magenta
+    Write-Host "  $($pet.name) takes a nap..." -ForegroundColor Yellow
+    Write-Host "  Zzz... Energy +40, Health +5" -ForegroundColor DarkGray
+    Write-Host "  $($pet.name) feels refreshed!" -ForegroundColor Magenta
     Write-Host ""
 
     Save-PetData -PetData $pet
@@ -409,8 +411,8 @@ function Show-PetEvolution {
     }
 
     Write-Host ""
-    Write-Host "  🌸 Evolution Progress" -ForegroundColor Magenta
-    Write-Host "  ══════════════════════" -ForegroundColor DarkGray
+    Write-Host "  Evolution Progress" -ForegroundColor Magenta
+    Write-Host "  ==================" -ForegroundColor DarkGray
     Write-Host "  Current Stage: $($currentStage.name)" -ForegroundColor White
     Write-Host "  Level:         $($pet.level)/$($currentStage.max_level)" -ForegroundColor Yellow
     Write-Host "  Experience:    $($pet.experience)/$($pet.exp_to_next)" -ForegroundColor Cyan
@@ -420,13 +422,13 @@ function Show-PetEvolution {
         Write-Host "  Next Stage:    $($nextStage.name) (Level $($nextStage.min_level))" -ForegroundColor DarkGray
         Write-Host "  Progress:      $(Get-StatBar $progress) $progress%" -ForegroundColor Magenta
     } else {
-        Write-Host "  🌟 You've reached the final evolution! 🌟" -ForegroundColor Yellow
+        Write-Host "  You've reached the final evolution!" -ForegroundColor Yellow
     }
 
     Write-Host ""
     Write-Host "  All Stages:" -ForegroundColor Cyan
     foreach ($stage in $species.stages) {
-        $marker = if ($stage.name -eq $currentStage.name) { "← You are here" } else { "" }
+        $marker = if ($stage.name -eq $currentStage.name) { "<-- You are here" } else { "" }
         $color = if ($stage.name -eq $currentStage.name) { "Green" } else { "DarkGray" }
         Write-Host "    Lv $($stage.min_level.ToString().PadRight(3))- $($stage.max_level.ToString().PadRight(3)): $($stage.name) $marker" -ForegroundColor $color
     }
@@ -474,18 +476,18 @@ function Add-PetExperience {
     if ($newStage -and $oldStage.name -ne $newStage.name) {
         $pet.evolution_count++
         Write-Host ""
-        Write-Host "  🌸✨ EVOLUTION! ✨🌸" -ForegroundColor Yellow
+        Write-Host "  EVOLUTION!" -ForegroundColor Yellow
         Write-Host "  $($pet.name) evolved from $($oldStage.name) to $($newStage.name)!" -ForegroundColor Magenta
         Write-Host ""
 
         # Check evolution achievements
         if ($pet.evolution_count -eq 1 -and -not ($pet.achievements -contains "first_evolution")) {
             $pet.achievements += "first_evolution"
-            Write-Host "  🏆 Achievement Unlocked: Growing Up!" -ForegroundColor Yellow
+            Write-Host "  Achievement Unlocked: Growing Up!" -ForegroundColor Yellow
         }
         if ($pet.evolution_count -ge 5 -and -not ($pet.achievements -contains "five_evolutions")) {
             $pet.achievements += "five_evolutions"
-            Write-Host "  🏆 Achievement Unlocked: Ancient One!" -ForegroundColor Yellow
+            Write-Host "  Achievement Unlocked: Ancient One!" -ForegroundColor Yellow
         }
     }
 
@@ -497,35 +499,35 @@ function Add-PetExperience {
     # Check achievements
     if ($pet.total_installs -eq 1 -and -not ($pet.achievements -contains "first_install")) {
         $pet.achievements += "first_install"
-        Write-Host "  🏆 Achievement Unlocked: First Steps!" -ForegroundColor Yellow
+        Write-Host "  Achievement Unlocked: First Steps!" -ForegroundColor Yellow
     }
     if ($pet.total_installs -ge 10 -and -not ($pet.achievements -contains "ten_installs")) {
         $pet.achievements += "ten_installs"
-        Write-Host "  🏆 Achievement Unlocked: Collector!" -ForegroundColor Yellow
+        Write-Host "  Achievement Unlocked: Collector!" -ForegroundColor Yellow
     }
     if ($pet.total_installs -ge 100 -and -not ($pet.achievements -contains "hundred_installs")) {
         $pet.achievements += "hundred_installs"
-        Write-Host "  🏆 Achievement Unlocked: Package Master!" -ForegroundColor Yellow
+        Write-Host "  Achievement Unlocked: Package Master!" -ForegroundColor Yellow
     }
     if ($pet.happiness -ge 100 -and -not ($pet.achievements -contains "max_happiness")) {
         $pet.achievements += "max_happiness"
-        Write-Host "  🏆 Achievement Unlocked: Pure Joy!" -ForegroundColor Yellow
+        Write-Host "  Achievement Unlocked: Pure Joy!" -ForegroundColor Yellow
     }
 
     # Time-based achievements
     $hour = (Get-Date).Hour
     if ($hour -lt 7 -and -not ($pet.achievements -contains "early_bird")) {
         $pet.achievements += "early_bird"
-        Write-Host "  🏆 Achievement Unlocked: Early Bird!" -ForegroundColor Yellow
+        Write-Host "  Achievement Unlocked: Early Bird!" -ForegroundColor Yellow
     }
     if ($hour -ge 0 -and $hour -lt 5 -and -not ($pet.achievements -contains "night_owl")) {
         $pet.achievements += "night_owl"
-        Write-Host "  🏆 Achievement Unlocked: Night Owl!" -ForegroundColor Yellow
+        Write-Host "  Achievement Unlocked: Night Owl!" -ForegroundColor Yellow
     }
 
     if ($leveledUp) {
         Write-Host ""
-        Write-Host "  🎉 Level Up! $($pet.name) is now Level $($pet.level)!" -ForegroundColor Yellow
+        Write-Host "  Level Up! $($pet.name) is now Level $($pet.level)!" -ForegroundColor Yellow
         Write-Host ""
     }
 

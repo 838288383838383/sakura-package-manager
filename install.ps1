@@ -11,23 +11,12 @@ $ErrorActionPreference = "Stop"
 $SakuraVersion = "2.0.1"
 
 Write-Host ""
-Write-Host "    🌸 S A K U R A   I N S T A L L E R 🌸" -ForegroundColor Magenta
-Write-Host "    ════════════════════════════════════════" -ForegroundColor DarkGray
+Write-Host "    S A K U R A   I N S T A L L E R" -ForegroundColor Magenta
+Write-Host "    ==================================" -ForegroundColor DarkGray
 Write-Host ""
 
 # Bypass execution policy (like Scoop does)
-$currentPolicy = Get-ExecutionPolicy -Scope CurrentUser
-if ($currentPolicy -ne "RemoteSigned" -and $currentPolicy -ne "Unrestricted" -and $currentPolicy -ne "Bypass") {
-    Write-Host "  Setting execution policy to RemoteSigned..." -ForegroundColor Cyan
-    try {
-        Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-        Write-Host "  ✅ Execution policy set to RemoteSigned" -ForegroundColor Green
-    } catch {
-        Write-Host "  ⚠️  Could not set execution policy (may need admin)" -ForegroundColor Yellow
-        Write-Host "  Trying Bypass for current process..." -ForegroundColor Yellow
-        Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
-    }
-}
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
 
 # Check PowerShell version
 if ($PSVersionTable.PSVersion.Major -lt 5) {
@@ -60,7 +49,8 @@ foreach ($dir in $dirs) {
 }
 
 # Copy Sakura files
-Write-Host "`n  Installing Sakura files..." -ForegroundColor Cyan
+Write-Host ""
+Write-Host "  Installing Sakura files..." -ForegroundColor Cyan
 $SakuraSource = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Copy lib files
@@ -122,7 +112,8 @@ if (-not (Test-Path $petPath)) {
 }
 
 # Create shim directory and add to PATH
-Write-Host "`n  Configuring PATH..." -ForegroundColor Cyan
+Write-Host ""
+Write-Host "  Configuring PATH..." -ForegroundColor Cyan
 $currentPath = [Environment]::GetEnvironmentVariable("PATH", "User")
 if ($currentPath -notlike "*$InstallDir\shims*") {
     [Environment]::SetEnvironmentVariable("PATH", "$InstallDir\shims;$currentPath", "User")
@@ -146,7 +137,8 @@ powershell -ExecutionPolicy Bypass -File "$sakuraCmd" %*
 "@
 Set-Content -Path $sakShim -Value $sakContent -Encoding ASCII
 
-Write-Host "`n  ✅ Installation complete!" -ForegroundColor Green
+Write-Host ""
+Write-Host "  Installation complete!" -ForegroundColor Green
 Write-Host ""
 Write-Host "  Usage:" -ForegroundColor Yellow
 Write-Host "    sakura help          Show help (or just 'sak')" -ForegroundColor White
@@ -155,6 +147,9 @@ Write-Host "    sak pet              Meet your new companion!" -ForegroundColor 
 Write-Host ""
 Write-Host "  Both 'sakura' and 'sak' work - use whichever you prefer!" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "  🌸 Your pet Sakura-chan is waiting to meet you!" -ForegroundColor Magenta
-Write-Host "     Run 'sak pet' to say hello!" -ForegroundColor Magenta
+Write-Host "  Your pet Sakura-chan is waiting to meet you!" -ForegroundColor Magenta
+Write-Host "  Run 'sak pet' to say hello!" -ForegroundColor Magenta
 Write-Host ""
+Write-Host "  Closing in 5 seconds..." -ForegroundColor DarkGray
+Start-Sleep -Seconds 5
+exit

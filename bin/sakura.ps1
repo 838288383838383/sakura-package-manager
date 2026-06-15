@@ -46,27 +46,25 @@ Initialize-Sakura
 
 # Show banner
 function Show-Banner {
-    $colors = @("#FFB7C5", "#FF69B4", "#FF1493", "#C71585")
-    $banner = @"
-    
-    $($colors[0])━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    ┃                                           ┃
-    ┃    🌸 S A K U R A   P A C K A G E R 🌸   ┃
-    ┃                                           ┃
-    ┃    v$SakuraVersion - Blossom Edition        ┃
-    ┃    Your friendly package manager          ┃
-    ┃    with a digital friend inside           ┃
-    ┃                                           ┃
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$($colors[3])
-"@
-    Write-Host $banner
+    Write-Host ""
+    Write-Host "    =======================================" -ForegroundColor Magenta
+    Write-Host "    |                                    |" -ForegroundColor Magenta
+    Write-Host "    |    S A K U R A   P A C K A G E R    |" -ForegroundColor Magenta
+    Write-Host "    |                                    |" -ForegroundColor Magenta
+    Write-Host "    |    v$SakuraVersion - Blossom Edition       |" -ForegroundColor Magenta
+    Write-Host "    |    Your friendly package manager    |" -ForegroundColor Magenta
+    Write-Host "    |    with a digital friend inside     |" -ForegroundColor Magenta
+    Write-Host "    |                                    |" -ForegroundColor Magenta
+    Write-Host "    =======================================" -ForegroundColor Magenta
+    Write-Host ""
 }
 
 function Show-Help {
     Show-Banner
-    Write-Host "`n  Usage: sakura <command> [arguments]" -ForegroundColor Cyan
+    Write-Host "  Usage: sakura <command> [arguments]" -ForegroundColor Cyan
     Write-Host "         sak <command> [arguments]  (short alias)" -ForegroundColor DarkGray
-    Write-Host "`n  Package Commands:" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  Package Commands:" -ForegroundColor Yellow
     Write-Host "    install <app> [-viab <bucket>]  Install an app from a specific bucket"
     Write-Host "    uninstall <app>                Remove an application"
     Write-Host "    update [app]                   Update app(s) or all"
@@ -74,25 +72,31 @@ function Show-Help {
     Write-Host "    list                           List installed apps"
     Write-Host "    info <app>                     Show app information"
     Write-Host "    upgrade                        Upgrade all apps"
-    Write-Host "`n  Self Update:" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  Self Update:" -ForegroundColor Yellow
     Write-Host "    updt                           Update Sakura itself"
     Write-Host "    update -sak                    Update Sakura (short form)"
-    Write-Host "`n  WSL Commands:" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  WSL Commands:" -ForegroundColor Yellow
     Write-Host "    wsl                            List installed WSL distros"
     Write-Host "    wsl launch <distro>            Launch a WSL distro"
     Write-Host "    wsl rm <distro>                Uninstall a WSL distro"
-    Write-Host "`n  Bucket Commands:" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  Bucket Commands:" -ForegroundColor Yellow
     Write-Host "    bucket list                    List added buckets"
     Write-Host "    bucket add <name>              Add a bucket"
     Write-Host "    bucket rm <name>               Remove a bucket"
-    Write-Host "`n  Pet Commands:" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  Pet Commands:" -ForegroundColor Yellow
     Write-Host "    pet                            Interact with your pet"
     Write-Host "    pet feed/play/nap/pet          Pet interactions"
     Write-Host "    pet evolve                     Check evolution progress"
-    Write-Host "`n  Config Commands:" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  Config Commands:" -ForegroundColor Yellow
     Write-Host "    config get/set/list            Manage configuration"
-    Write-Host "`n  Other:" -ForegroundColor Yellow
-    Write-Host "    sl                 All aboard! Choo choo! 🚂"
+    Write-Host ""
+    Write-Host "  Other:" -ForegroundColor Yellow
+    Write-Host "    sl                 All aboard! Choo choo!"
     Write-Host "    version            Show version"
     Write-Host "    help               Show this help"
     Write-Host ""

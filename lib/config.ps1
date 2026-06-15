@@ -62,8 +62,9 @@ function Show-SakuraConfig {
         return
     }
 
-    Write-Host "`n  Sakura Configuration:" -ForegroundColor Cyan
-    Write-Host "  ─────────────────────" -ForegroundColor DarkGray
+    Write-Host ""
+    Write-Host "  Sakura Configuration:" -ForegroundColor Cyan
+    Write-Host "  ----------------------" -ForegroundColor DarkGray
     foreach ($prop in $config.PSObject.Properties) {
         $value = $prop.Value
         if ($prop.Name -like "*token*" -or $prop.Name -like "*key*") {

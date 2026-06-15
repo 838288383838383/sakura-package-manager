@@ -7,18 +7,21 @@ function Update-SakuraPackages {
     )
 
     if ($All) {
-        Write-Host "`n  Updating all packages..." -ForegroundColor Cyan
+        Write-Host ""
+        Write-Host "  Updating all packages..." -ForegroundColor Cyan
         $apps = Get-ChildItem -Path $Script:SakuraApps -Directory -ErrorAction SilentlyContinue
         foreach ($app in $apps) {
             Update-SinglePackage -Name $app.Name
         }
-        Write-Host "`n  ✅ All packages updated!" -ForegroundColor Green
+        Write-Host ""
+        Write-Host "  All packages updated!" -ForegroundColor Green
     } elseif ($Names.Count -gt 0) {
         foreach ($name in $Names) {
             Update-SinglePackage -Name $name
         }
     } else {
-        Write-Host "`n  Checking for updates..." -ForegroundColor Cyan
+        Write-Host ""
+        Write-Host "  Checking for updates..." -ForegroundColor Cyan
         $apps = Get-ChildItem -Path $Script:SakuraApps -Directory -ErrorAction SilentlyContinue
         $updatesAvailable = 0
 
@@ -38,7 +41,8 @@ function Update-SakuraPackages {
         if ($updatesAvailable -eq 0) {
             Write-SakuraSuccess "All packages are up to date!"
         } else {
-            Write-Host "`n  $updatesAvailable update(s) available. Run 'sakura upgrade' to update all." -ForegroundColor Yellow
+            Write-Host ""
+            Write-Host "  $updatesAvailable update(s) available. Run 'sakura upgrade' to update all." -ForegroundColor Yellow
         }
         Write-Host ""
     }
@@ -97,8 +101,8 @@ function Update-SinglePackage {
 
 function Update-SakuraSelf {
     Write-Host ""
-    Write-Host "  🌸 Updating Sakura Package Manager..." -ForegroundColor Magenta
-    Write-Host "  ═══════════════════════════════════════" -ForegroundColor DarkGray
+    Write-Host "  Updating Sakura Package Manager..." -ForegroundColor Magenta
+    Write-Host "  =====================================" -ForegroundColor DarkGray
 
     $sakuraHome = Split-Path -Parent $Script:SakuraRoot
 
@@ -126,10 +130,10 @@ function Update-SakuraSelf {
 
         # Show what's new
         Write-Host ""
-        Write-Host "  📦 Updates available:" -ForegroundColor Yellow
+        Write-Host "  Updates available:" -ForegroundColor Yellow
         $commits = git -C $sakuraHome log --oneline "$local..$remote" 2>&1
         foreach ($commit in $commits) {
-            Write-Host "    • $commit" -ForegroundColor DarkGray
+            Write-Host "    - $commit" -ForegroundColor DarkGray
         }
         Write-Host ""
 
@@ -148,7 +152,6 @@ function Update-SakuraSelf {
         # Get new version
         $newVersion = git -C $sakuraHome describe --tags --abbrev=0 2>&1
         if ($LASTEXITCODE -ne 0) {
-            # Try to extract from core.ps1
             $coreContent = Get-Content -Path "$sakuraHome\lib\core.ps1" -Raw
             if ($coreContent -match 'SakuraVersion\s*=\s*"(.+?)"') {
                 $newVersion = $Matches[1]
@@ -158,8 +161,8 @@ function Update-SakuraSelf {
         }
 
         Write-Host ""
-        Write-Host "  ✅ Sakura updated successfully!" -ForegroundColor Green
-        Write-Host "  🌸 New version: $newVersion" -ForegroundColor Magenta
+        Write-Host "  Sakura updated successfully!" -ForegroundColor Green
+        Write-Host "  New version: $newVersion" -ForegroundColor Magenta
         Write-Host ""
         Write-Host "  Restart your terminal or run:" -ForegroundColor Yellow
         Write-Host "    sakura version" -ForegroundColor White
