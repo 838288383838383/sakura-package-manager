@@ -1,0 +1,30 @@
+{
+    "name": "lazyvim",
+    "version": "14.3.0",
+    "description": "Neovim distro - fast & full-featured LazyVim starter config",
+    "homepage": "https://www.lazyvim.org",
+    "license": "Apache-2.0",
+    "url": "https://github.com/LazyVim/starter/archive/refs/tags/v14.3.0.zip",
+    "hash": "",
+    "extract_dir": "starter-14.3.0",
+    "dependencies": ["neovim"],
+    "checkver": {
+        "url": "https://github.com/LazyVim/starter/releases",
+        "regex": "v([\\d.]+)"
+    },
+    "post_install": [
+        "if (-not (Test-Path \"$env:LOCALAPPDATA\\nvim\")) { New-Item -ItemType Directory -Path \"$env:LOCALAPPDATA\\nvim\" -Force | Out-Null }",
+        "Copy-Item -Path \"$install_dir\\*\" -Destination \"$env:LOCALAPPDATA\\nvim\" -Recurse -Force",
+        "Write-Host '  🌸 LazyVim installed to $env:LOCALAPPDATA\\nvim' -ForegroundColor Green",
+        "Write-Host '  🚀 Run nvim to start!' -ForegroundColor Cyan",
+        "Write-Host '  📦 Plugins will auto-install on first launch' -ForegroundColor DarkGray"
+    ],
+    "uninstall_scripts": [
+        "Remove-Item -Path \"$env:LOCALAPPDATA\\nvim\" -Recurse -Force -ErrorAction SilentlyContinue"
+    ],
+    "suggest": {
+        "neovim": "Required runtime - install with: sakura install neovim",
+        "ripgrep": "Fuzzy finder dependency - install with: sakura install ripgrep",
+        "fd": "Fast find alternative - install with: sakura install fd"
+    }
+}

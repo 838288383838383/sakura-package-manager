@@ -1,0 +1,15 @@
+{
+    "name": "ripgrep",
+    "version": "14.1.0",
+    "description": "Fast grep written in Rust, with regex support",
+    "homepage": "https://github.com/BurntSushi/ripgrep",
+    "license": "MIT",
+    "url": "https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep-14.1.0-x86_64-pc-windows-msvc.zip",
+    "hash": "",
+    "extract_dir": "ripgrep-14.1.0-x86_64-pc-windows-msvc",
+    "bin": ["rg.exe"],
+    "checkver": {
+        "url": "https://github.com/BurntSushi/ripgrep/releases",
+        "regex": "([\\d.]+)"
+    }
+}

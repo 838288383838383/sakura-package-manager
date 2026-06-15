@@ -132,6 +132,62 @@
             "type": "object",
             "additionalProperties": { "type": "string" },
             "description": "Suggested complementary packages"
+        },
+        "setup_prompts": {
+            "type": "array",
+            "description": "Interactive prompts shown during installation",
+            "items": {
+                "type": "object",
+                "required": ["question", "id", "type"],
+                "properties": {
+                    "question": {
+                        "type": "string",
+                        "description": "Question to display"
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "Unique identifier for this prompt"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["yesno", "choice", "text"],
+                        "description": "Prompt type"
+                    },
+                    "default": {
+                        "description": "Default value"
+                    },
+                    "options": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "label": { "type": "string" },
+                                "value": { "type": "string" },
+                                "description": { "type": "string" }
+                            }
+                        },
+                        "description": "Options for choice type"
+                    },
+                    "requires": {
+                        "type": "object",
+                        "description": "Conditions that must be met to show this prompt",
+                        "properties": {
+                            "app": { "type": "string" },
+                            "min_version": { "type": "string" }
+                        }
+                    }
+                }
+            }
+        },
+        "setup_scripts": {
+            "type": "object",
+            "description": "Scripts to run based on setup prompt answers",
+            "additionalProperties": {
+                "oneOf": [
+                    { "type": "string" },
+                    { "type": "array", "items": { "type": "string" } }
+                ]
+            }
         }
     },
     "definitions": {

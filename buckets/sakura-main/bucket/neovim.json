@@ -11,5 +11,46 @@
     "checkver": {
         "url": "https://github.com/neovim/neovim/releases",
         "regex": "v([\\d.]+)"
+    },
+    "suggest": {
+        "lazyvim": "A modern Neovim config - install with: sakura install lazyvim"
+    },
+    "setup_prompts": [
+        {
+            "id": "install_lazyvim",
+            "question": "Install with LazyVim starter config? (recommended)",
+            "type": "yesno",
+            "default": "yes"
+        },
+        {
+            "id": "lazyvim_version",
+            "question": "Which LazyVim version?",
+            "type": "choice",
+            "default": "1",
+            "options": [
+                { "label": "Stable", "value": "stable", "description": "Latest stable release (v14.x)" },
+                { "label": "Nightly", "value": "nightly", "description": "Bleeding edge features" },
+                { "label": "Custom", "value": "custom", "description": "Your own config" }
+            ],
+            "requires": {
+                "app": "neovim"
+            }
+        }
+    ],
+    "setup_scripts": {
+        "install_lazyvim": [
+            "git clone https://github.com/LazyVim/starter \"$env:LOCALAPPDATA\\nvim\" --depth 1"
+        ],
+        "lazyvim_version": {
+            "stable": [
+                "git -C \"$env:LOCALAPPDATA\\nvim\" checkout stable 2>$null"
+            ],
+            "nightly": [
+                "git -C \"$env:LOCALAPPDATA\\nvim\" checkout nightly 2>$null"
+            ],
+            "custom": [
+                "Write-Host '  Using custom config. Place your init.lua in: $env:LOCALAPPDATA\\nvim'"
+            ]
+        }
     }
 }

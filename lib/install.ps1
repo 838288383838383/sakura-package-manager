@@ -123,6 +123,91 @@ function Install-SakuraApp {
         New-Item -ItemType Directory -Path $persistDir -Force | Out-Null
     }
 
+    # Handle setup prompts
+    if ($manifest.setup_prompts) {
+        Write-Host ""
+        Write-Host "  ⚙️  Setup Options:" -ForegroundColor Cyan
+        $setupAnswers = @{}
+        foreach ($prompt in $manifest.setup_prompts) {
+            # Check if prompt requires a specific app/version
+            if ($prompt.requires) {
+                $reqApp = $prompt.requires.app
+                $reqVer = $prompt.requires.min_version
+                $reqInstalled = Test-Path (Join-Path $Script:SakuraApps $reqApp)
+                if (-not $reqInstalled) { continue }
+                if ($reqVer) {
+                    $reqManifest = Get-InstalledManifest -AppName $reqApp
+                    if ($reqManifest -and (Compare-SakuraVersions -Current $reqManifest.version -Latest $reqVer) -lt 0) {
+                        continue
+                    }
+                }
+            }
+
+            switch ($prompt.type) {
+                "yesno" {
+                    $default = if ($prompt.default) { $prompt.default } else { "no" }
+                    $indicator = if ($default -eq "yes") { "[Y/n]" } else { "[y/N]" }
+                    Write-Host ""
+                    Write-Host "  $($prompt.question) $indicator" -ForegroundColor Yellow
+                    $answer = Read-Host "  "
+                    if ([string]::IsNullOrWhiteSpace($answer)) { $answer = $default }
+                    $setupAnswers[$prompt.id] = $answer.ToLower() -eq "yes" -or $answer.ToLower() -eq "y"
+                }
+                "choice" {
+                    Write-Host ""
+                    Write-Host "  $($prompt.question)" -ForegroundColor Yellow
+                    for ($i = 0; $i -lt $prompt.options.Count; $i++) {
+                        $opt = $prompt.options[$i]
+                        $marker = if ($i -eq 0) { "→" } else { " " }
+                        Write-Host "  $marker [$($i+1)] $($opt.label) - $($opt.description)" -ForegroundColor White
+                    }
+                    $default = if ($prompt.default) { $prompt.default } else { "1" }
+                    $answer = Read-Host "  Select (default: $default)"
+                    if ([string]::IsNullOrWhiteSpace($answer)) { $answer = $default }
+                    $idx = [int]$answer - 1
+                    if ($idx -ge 0 -and $idx -lt $prompt.options.Count) {
+                        $setupAnswers[$prompt.id] = $prompt.options[$idx].value
+                    } else {
+                        $setupAnswers[$prompt.id] = $prompt.options[0].value
+                    }
+                }
+                "text" {
+                    Write-Host ""
+                    Write-Host "  $($prompt.question)" -ForegroundColor Yellow
+                    $answer = Read-Host "  "
+                    if ([string]::IsNullOrWhiteSpace($answer) -and $prompt.default) {
+                        $answer = $prompt.default
+                    }
+                    $setupAnswers[$prompt.id] = $answer
+                }
+            }
+        }
+
+        # Run setup scripts based on answers
+        if ($manifest.setup_scripts) {
+            foreach ($key in $setupAnswers.Keys) {
+                $value = $setupAnswers[$key]
+                if ($value -and $manifest.setup_scripts.PSObject.Properties[$key]) {
+                    $script = $manifest.setup_scripts.$key
+                    if ($script -is [string]) {
+                        $script = @($script)
+                    }
+                    foreach ($cmd in $script) {
+                        Write-SakuraProgress "Running setup: $cmd"
+                        $cmd = $cmd -replace '\$install_dir', $currentDir
+                        $cmd = $cmd -replace '\$app_name', $Name
+                        $cmd = $cmd -replace '\$pet_dir', $Script:SakuraPetData
+                        try {
+                            Invoke-Expression $cmd
+                        } catch {
+                            Write-SakuraWarning "Setup command failed: $_"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     # Save manifest
     $manifestHash = @{}
     $manifest.PSObject.Properties | ForEach-Object { $manifestHash[$_.Name] = $_.Value }
