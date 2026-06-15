@@ -1,0 +1,19 @@
+{
+    "name": "steam",
+    "version": "2024.05.01",
+    "description": "The ultimate entertainment platform - play, discuss, and create",
+    "homepage": "https://store.steampowered.com",
+    "license": "Freeware",
+    "url": "https://cdn.akamai.steamstatic.com/client/installer/SteamSetup.exe",
+    "hash": "",
+    "nonportable": true,
+    "bin": ["steam.exe"],
+    "installer": {
+        "type": "nsis",
+        "admin": false
+    },
+    "checkver": {
+        "url": "https://store.steampowered.com/api/storeinfo/?cc=us",
+        "jsonpath": "$.config.version"
+    }
+}

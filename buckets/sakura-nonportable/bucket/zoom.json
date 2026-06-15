@@ -1,0 +1,20 @@
+{
+    "name": "zoom",
+    "version": "5.17.11",
+    "description": "Video meetings, webinars, and collaboration",
+    "homepage": "https://zoom.us",
+    "license": "Freeware",
+    "url": "https://zoom.us/client/latest/ZoomInstallerFull.msi",
+    "hash": "",
+    "nonportable": true,
+    "bin": ["Zoom.exe"],
+    "installer": {
+        "type": "msi",
+        "args": ["/qn", "/norestart"],
+        "admin": false
+    },
+    "checkver": {
+        "url": "https://zoom.us/client/latest/zoominfo.xml",
+        "regex": "version=\"([\\d.]+)\""
+    }
+}

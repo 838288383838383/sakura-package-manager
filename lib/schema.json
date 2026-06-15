@@ -133,6 +133,54 @@
             "additionalProperties": { "type": "string" },
             "description": "Suggested complementary packages"
         },
+        "installer": {
+            "type": "object",
+            "description": "Installer configuration for non-portable apps (MSI, EXE, Inno, NSIS, etc.)",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": ["msi", "exe", "inno", "nsis", "autohotkey", "7z", "custom"],
+                    "description": "Installer type"
+                },
+                "file": {
+                    "type": "string",
+                    "description": "Installer filename (defaults to last URL)"
+                },
+                "args": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Arguments to pass to installer"
+                },
+                "script": {
+                    "type": ["string", "array"],
+                    "description": "Custom install script instead of running installer"
+                },
+                "interactive": {
+                    "type": "boolean",
+                    "description": "Show installer UI (default: false - silent install)"
+                },
+                "admin": {
+                    "type": "boolean",
+                    "description": "Requires admin elevation"
+                },
+                "install_dir": {
+                    "type": "string",
+                    "description": "Custom install directory"
+                },
+                "uninstaller": {
+                    "type": "object",
+                    "properties": {
+                        "file": { "type": "string" },
+                        "args": { "type": "array", "items": { "type": "string" } },
+                        "script": { "type": ["string", "array"] }
+                    }
+                }
+            }
+        },
+        "nonportable": {
+            "type": "boolean",
+            "description": "Mark as non-portable (requires installer, may need admin)"
+        },
         "setup_prompts": {
             "type": "array",
             "description": "Interactive prompts shown during installation",

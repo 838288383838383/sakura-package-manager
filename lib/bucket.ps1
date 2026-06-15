@@ -37,6 +37,7 @@ function Add-SakuraBucket {
     # Well-known bucket URLs
     $knownBuckets = @{
         "community" = "https://github.com/838288383838383/sakura-community-bucket.git"
+        "nonportable" = "https://github.com/838288383838383/sakura-nonportable-bucket.git"
     }
 
     if (-not $Url -and $knownBuckets.ContainsKey($Name)) {

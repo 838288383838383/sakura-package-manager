@@ -1,0 +1,20 @@
+{
+    "name": "notepadplusplus",
+    "version": "8.6.8",
+    "description": "Free source code editor and Notepad replacement",
+    "homepage": "https://notepad-plus-plus.org",
+    "license": "GPL-2.0",
+    "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.6.8/npp.8.6.8.Installer.x64.exe",
+    "hash": "",
+    "nonportable": true,
+    "bin": ["notepad++.exe"],
+    "installer": {
+        "type": "inno",
+        "args": ["/S"],
+        "admin": false
+    },
+    "checkver": {
+        "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/releases",
+        "regex": "v([\\d.]+)"
+    }
+}

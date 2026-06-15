@@ -1,0 +1,19 @@
+{
+    "name": "slack",
+    "version": "4.39.95",
+    "description": "Team collaboration hub - messaging, search, and archiving",
+    "homepage": "https://slack.com",
+    "license": "Freeware",
+    "url": "https://downloads.slack-edge.com/releases/windows-x64/releases/stable/SlackSetup.exe",
+    "hash": "",
+    "nonportable": true,
+    "bin": ["Slack.exe"],
+    "installer": {
+        "type": "squirrel",
+        "admin": false
+    },
+    "checkver": {
+        "url": "https://slack.com/release-notes/windows",
+        "regex": "([\\d.]+)"
+    }
+}

@@ -80,40 +80,161 @@ function Install-SakuraApp {
         Write-SakuraSuccess "Hash verified."
     }
 
-    # Extract
-    Write-SakuraProgress "Extracting..."
-    try {
-        $extractDir = if ($manifest.extract_dir) { $manifest.extract_dir } else { "" }
-        Expand-SakuraArchive -ArchivePath $downloadPath -DestinationPath $currentDir -ExtractDir $extractDir
-        Write-SakuraSuccess "Extracted to $currentDir"
-    } catch {
-        Write-SakuraError "Extraction failed: $_"
-        return
-    }
+    # Handle non-portable installer OR extract
+    if ($manifest.installer -or $manifest.nonportable) {
+        # Non-portable install (MSI, EXE, Inno, NSIS, etc.)
+        $installer = $manifest.installer
+        if (-not $installer) { $installer = @{} }
 
-    # Create shims
-    if ($manifest.bin) {
-        Write-SakuraProgress "Creating shims..."
-        $bins = if ($manifest.bin -is [array]) { $manifest.bin } else { @($manifest.bin) }
-        foreach ($bin in $bins) {
-            $binPath = Join-Path $currentDir $bin
-            if (Test-Path $binPath) {
-                New-SakuraShim -AppName $Name -BinPath $binPath -ShimName ([System.IO.Path]::GetFileNameWithoutExtension($bin))
-            } else {
-                # Try to find the binary
-                $found = Get-ChildItem -Path $currentDir -Recurse -Filter $bin -ErrorAction SilentlyContinue | Select-Object -First 1
-                if ($found) {
-                    New-SakuraShim -AppName $Name -BinPath $found.FullName -ShimName ([System.IO.Path]::GetFileNameWithoutExtension($bin))
+        $installType = if ($installer.type) { $installer.type } else {
+            # Auto-detect from URL extension
+            $ext = [System.IO.Path]::GetExtension($downloadPath).ToLower()
+            switch ($ext) {
+                ".msi" { "msi" }
+                ".exe" { "exe" }
+                default { "exe" }
+            }
+        }
+
+        Write-SakuraProgress "Running $installType installer..."
+
+        $installArgs = @()
+        $silentArgs = @()
+
+        switch ($installType) {
+            "msi" {
+                $silentArgs = @("/i", "`"$downloadPath`"", "/quiet", "/norestart")
+                if ($installer.args) { $silentArgs += $installer.args }
+                if ($installer.admin) {
+                    $installArgs = @("-Command", "Start-Process msiexec -ArgumentList '$($silentArgs -join ' ')' -Verb RunAs -Wait")
+                } else {
+                    $installArgs = @("-Command", "msiexec $($silentArgs -join ' ')")
+                }
+            }
+            "inno" {
+                $silentArgs = @("/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/SP-")
+                if ($installer.args) { $silentArgs += $installer.args }
+                $installArgs = @("-Command", "Start-Process `"$downloadPath`" -ArgumentList '$($silentArgs -join ' ')' -Wait")
+            }
+            "nsis" {
+                $silentArgs = @("/S")
+                if ($installer.args) { $silentArgs += $installer.args }
+                $installArgs = @("-Command", "Start-Process `"$downloadPath`" -ArgumentList '$($silentArgs -join ' ')' -Wait")
+            }
+            "7z" {
+                $extractDir = if ($installer.install_dir) { $installer.install_dir } else { $currentDir }
+                Expand-SakuraArchive -ArchivePath $downloadPath -DestinationPath $extractDir
+            }
+            default {
+                # Generic EXE
+                $exeArgs = @()
+                if (-not $installer.interactive) {
+                    $exeArgs += @("/S", "/SILENT", "/VERYSILENT", "/quiet", "/qn", "/norestart")
+                }
+                if ($installer.args) { $exeArgs = $installer.args }
+                $installArgs = @("-Command", "Start-Process `"$downloadPath`" -ArgumentList '$($exeArgs -join ' ')' -Wait")
+            }
+        }
+
+        if ($installType -ne "7z") {
+            try {
+                if ($installer.script) {
+                    $script = $installer.script
+                    if ($script -is [array]) { $script = $script -join "`n" }
+                    Invoke-Expression $script
+                } else {
+                    if ($installType -eq "msi" -and -not $installer.admin) {
+                        & msiexec $silentArgs
+                    } else {
+                        Invoke-Expression $installArgs
+                    }
+                }
+                Write-SakuraSuccess "Installer completed."
+            } catch {
+                Write-SakuraError "Installation failed: $_"
+                return
+            }
+        }
+
+        # Find installed binaries
+        $installDir = if ($installer.install_dir) { $installer.install_dir } else { "${env:ProgramFiles}\$Name" }
+        if ($manifest.bin) {
+            $bins = if ($manifest.bin -is [array]) { $manifest.bin } else { @($manifest.bin) }
+            foreach ($bin in $bins) {
+                # Check common install locations
+                $locations = @(
+                    $installDir,
+                    "${env:ProgramFiles}\$Name",
+                    "${env:ProgramFiles(x86)}\$Name",
+                    "$env:LOCALAPPDATA\$Name"
+                )
+                $found = $false
+                foreach ($loc in $locations) {
+                    $binPath = Join-Path $loc $bin
+                    if (Test-Path $binPath) {
+                        New-SakuraShim -AppName $Name -BinPath $binPath -ShimName ([System.IO.Path]::GetFileNameWithoutExtension($bin))
+                        $found = $true
+                        break
+                    }
+                }
+                if (-not $found) {
+                    # Try searching Program Files
+                    $searchResult = Get-ChildItem -Path "${env:ProgramFiles}" -Recurse -Filter $bin -ErrorAction SilentlyContinue | Select-Object -First 1
+                    if ($searchResult) {
+                        New-SakuraShim -AppName $Name -BinPath $searchResult.FullName -ShimName ([System.IO.Path]::GetFileNameWithoutExtension($bin))
+                    }
                 }
             }
         }
-    }
 
-    # Handle shortcuts
-    if ($manifest.shortcuts) {
-        Write-SakuraProgress "Creating shortcuts..."
-        foreach ($shortcut in $manifest.shortcuts) {
-            New-SakuraShortcut -AppName $Name -ExecutablePath (Join-Path $currentDir $shortcut[0]) -Label $shortcut[1]
+        # Run post_install if any
+        if ($manifest.post_install) {
+            $postScripts = if ($manifest.post_install -is [array]) { $manifest.post_install } else { @($manifest.post_install) }
+            foreach ($cmd in $postScripts) {
+                Write-SakuraProgress "Running post-install: $cmd"
+                try {
+                    Invoke-Expression $cmd
+                } catch {
+                    Write-SakuraWarning "Post-install command failed: $_"
+                }
+            }
+        }
+
+    } else {
+        # Portable install (extract)
+        Write-SakuraProgress "Extracting..."
+        try {
+            $extractDir = if ($manifest.extract_dir) { $manifest.extract_dir } else { "" }
+            Expand-SakuraArchive -ArchivePath $downloadPath -DestinationPath $currentDir -ExtractDir $extractDir
+            Write-SakuraSuccess "Extracted to $currentDir"
+        } catch {
+            Write-SakuraError "Extraction failed: $_"
+            return
+        }
+
+        # Create shims
+        if ($manifest.bin) {
+            Write-SakuraProgress "Creating shims..."
+            $bins = if ($manifest.bin -is [array]) { $manifest.bin } else { @($manifest.bin) }
+            foreach ($bin in $bins) {
+                $binPath = Join-Path $currentDir $bin
+                if (Test-Path $binPath) {
+                    New-SakuraShim -AppName $Name -BinPath $binPath -ShimName ([System.IO.Path]::GetFileNameWithoutExtension($bin))
+                } else {
+                    $found = Get-ChildItem -Path $currentDir -Recurse -Filter $bin -ErrorAction SilentlyContinue | Select-Object -First 1
+                    if ($found) {
+                        New-SakuraShim -AppName $Name -BinPath $found.FullName -ShimName ([System.IO.Path]::GetFileNameWithoutExtension($bin))
+                    }
+                }
+            }
+        }
+
+        # Handle shortcuts
+        if ($manifest.shortcuts) {
+            Write-SakuraProgress "Creating shortcuts..."
+            foreach ($shortcut in $manifest.shortcuts) {
+                New-SakuraShortcut -AppName $Name -ExecutablePath (Join-Path $currentDir $shortcut[0]) -Label $shortcut[1]
+            }
         }
     }
 

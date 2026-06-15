@@ -1,0 +1,19 @@
+{
+    "name": "discord",
+    "version": "1.0.9015",
+    "description": "Talk, chat, hang out, and stay close with your friends and communities",
+    "homepage": "https://discord.com",
+    "license": "Freeware",
+    "url": "https://discord.com/api/download/stable?platform=win&arch=x64",
+    "hash": "",
+    "nonportable": true,
+    "bin": ["Discord.exe"],
+    "installer": {
+        "type": "nsis",
+        "admin": false
+    },
+    "checkver": {
+        "url": "https://discord.com/api/downloads/stable.json",
+        "jsonpath": "$.version"
+    }
+}

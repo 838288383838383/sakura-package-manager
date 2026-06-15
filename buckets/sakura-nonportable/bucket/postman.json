@@ -1,0 +1,20 @@
+{
+    "name": "postman",
+    "version": "11.3.0",
+    "description": "API platform for building and using APIs",
+    "homepage": "https://www.postman.com",
+    "license": "Freeware",
+    "url": "https://dl.pstmn.io/download/latest/win64",
+    "hash": "",
+    "nonportable": true,
+    "bin": ["Postman.exe"],
+    "installer": {
+        "type": "nsis",
+        "args": ["/S"],
+        "admin": false
+    },
+    "checkver": {
+        "url": "https://api.postman.com/check-for-updates",
+        "jsonpath": "$.version"
+    }
+}

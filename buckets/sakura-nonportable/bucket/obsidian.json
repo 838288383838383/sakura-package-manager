@@ -1,0 +1,20 @@
+{
+    "name": "obsidian",
+    "version": "1.6.5",
+    "description": "A second brain, for you, forever - knowledge base and note-taking",
+    "homepage": "https://obsidian.md",
+    "license": "Commercial",
+    "url": "https://github.com/obsidianmd/obsidian-releases/releases/download/v1.6.5/Obsidian.1.6.5.exe",
+    "hash": "",
+    "nonportable": true,
+    "bin": ["Obsidian.exe"],
+    "installer": {
+        "type": "nsis",
+        "args": ["/S"],
+        "admin": false
+    },
+    "checkver": {
+        "url": "https://github.com/obsidianmd/obsidian-releases/releases",
+        "regex": "v([\\d.]+)"
+    }
+}
