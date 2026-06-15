@@ -2,7 +2,7 @@
 # Core functions and initialization
 
 $Script:SakuraRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
-$Script:SakuraVersion = "0.1.0"
+# Version is set in sakura.ps1, not here
 
 function Initialize-Sakura {
     $Script:SakuraHome = Join-Path $env:USERPROFILE ".sakura"
@@ -35,7 +35,7 @@ function Initialize-Sakura {
     $configPath = Join-Path $Script:SakuraHome "config.json"
     if (-not (Test-Path $configPath)) {
         $defaultConfig = @{
-            version = $Script:SakuraVersion
+            version = "2.0.1"
             default_bucket = "sakura-main"
             use_isolated_path = $true
             proxy = ""
@@ -104,7 +104,7 @@ function Write-SakuraLogo {
     echo     ███████║██║  ██║██║  ██║██████╔╝██║  ██║   ██║   
     echo     ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═╝   ╚═╝   
     echo.
-    echo     🌸 Blossom Edition v$Script:SakuraVersion 🌸
+    echo     Blossom Edition v2.0.1
     echo.
 "@
     Write-Host $logo -ForegroundColor Magenta
