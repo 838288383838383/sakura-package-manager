@@ -18,6 +18,9 @@ param(
     [string[]]$Arguments
 )
 
+# Force bypass execution policy (like Scoop)
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+
 $ErrorActionPreference = "Stop"
 $SakuraRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $SakuraVersion = "2.0.1"

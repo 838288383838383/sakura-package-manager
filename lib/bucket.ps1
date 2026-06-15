@@ -8,10 +8,15 @@ function Show-SakuraBuckets {
         return
     }
 
-    Write-Host "`n  Available Buckets:" -ForegroundColor Cyan
-    Write-Host "  ─────────────────" -ForegroundColor DarkGray
+    Write-Host ""
+    Write-Host "  Available Buckets:" -ForegroundColor Cyan
+    Write-Host "  ------------------" -ForegroundColor DarkGray
     foreach ($bucket in $buckets) {
-        $manifestCount = (Get-ChildItem -Path (Join-Path $bucket.FullName "bucket") -Filter "*.json" -ErrorAction SilentlyContinue).Count
+        $bucketDir = Join-Path $bucket.FullName "bucket"
+        $manifestCount = 0
+        if (Test-Path $bucketDir) {
+            $manifestCount = (Get-ChildItem -Path $bucketDir -Filter "*.json" -ErrorAction SilentlyContinue).Count
+        }
         $defaultMarker = ""
         $config = Get-SakuraConfigObj
         if ($config.default_bucket -eq $bucket.Name) { $defaultMarker = " (default)" }
@@ -34,7 +39,6 @@ function Add-SakuraBucket {
 
     Write-SakuraProgress "Adding bucket: $Name"
 
-    # Well-known bucket URLs
     $knownBuckets = @{
         "community" = "https://github.com/838288383838383/sakura-community-bucket.git"
         "nonportable" = "https://github.com/838288383838383/sakura-nonportable-bucket.git"
@@ -46,7 +50,6 @@ function Add-SakuraBucket {
     }
 
     if ($Url) {
-        # Clone from git
         Write-SakuraProgress "Cloning from: $Url"
         try {
             $ProgressPreference = 'SilentlyContinue'
@@ -55,14 +58,17 @@ function Add-SakuraBucket {
                 Write-SakuraError "Failed to clone bucket."
                 return
             }
-            $manifestCount = (Get-ChildItem -Path (Join-Path $bucketPath "bucket") -Filter "*.json" -ErrorAction SilentlyContinue).Count
+            $bucketDir = Join-Path $bucketPath "bucket"
+            $manifestCount = 0
+            if (Test-Path $bucketDir) {
+                $manifestCount = (Get-ChildItem -Path $bucketDir -Filter "*.json" -ErrorAction SilentlyContinue).Count
+            }
             Write-SakuraSuccess "Bucket '$Name' added with $manifestCount packages."
         } catch {
             Write-SakuraError "Failed to clone bucket: $_"
             return
         }
     } else {
-        # Create empty local bucket
         New-Item -ItemType Directory -Path "$bucketPath\bucket" -Force | Out-Null
         Write-SakuraSuccess "Bucket '$Name' created locally."
     }
@@ -88,7 +94,9 @@ function Search-SakuraBuckets {
     $buckets = Get-ChildItem -Path $Script:SakuraBuckets -Directory -ErrorAction SilentlyContinue
 
     foreach ($bucket in $buckets) {
-        $manifests = Get-ChildItem -Path (Join-Path $bucket.FullName "bucket") -Filter "*.json" -ErrorAction SilentlyContinue
+        $bucketDir = Join-Path $bucket.FullName "bucket"
+        if (-not (Test-Path $bucketDir)) { continue }
+        $manifests = Get-ChildItem -Path $bucketDir -Filter "*.json" -ErrorAction SilentlyContinue
         foreach ($manifest in $manifests) {
             $content = Get-Content -Path $manifest.FullName -Raw -Encoding UTF8 | ConvertFrom-Json
             if ($content.name -like "*$Query*" -or $content.description -like "*$Query*") {
