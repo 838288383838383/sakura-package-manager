@@ -16,22 +16,24 @@ function Search-SakuraPackages {
     }
 
     Write-Host ""
-    Write-Host "    Name        Version   Description" -ForegroundColor Yellow
-    Write-Host "    ────        ───────   ───────────" -ForegroundColor DarkGray
+    Write-Host "    Name        Bucket         Version   Description" -ForegroundColor Yellow
+    Write-Host "    ────        ──────         ───────   ───────────" -ForegroundColor DarkGray
 
     foreach ($result in $results) {
         $name = $result.Name.PadRight(13)
+        $bucket = $result.Bucket.PadRight(15)
         $version = $result.Version.PadRight(10)
-        $desc = if ($result.Description.Length -gt 50) {
-            $result.Description.Substring(0, 47) + "..."
+        $desc = if ($result.Description.Length -gt 40) {
+            $result.Description.Substring(0, 37) + "..."
         } else {
             $result.Description
         }
-        Write-Host "    $name$version$desc" -ForegroundColor White
+        Write-Host "    $name$bucket$version$desc" -ForegroundColor White
     }
 
     Write-Host ""
-    Write-Host "  Found $($results.Count) result(s). Use 'sakura install <name>' to install." -ForegroundColor DarkGray
+    Write-Host "  Found $($results.Count) result(s)." -ForegroundColor DarkGray
+    Write-Host "  Install with: sakura install <name> [-viab <bucket>]" -ForegroundColor DarkGray
     Write-Host ""
 
     # Update pet

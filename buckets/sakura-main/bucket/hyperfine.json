@@ -1,0 +1,15 @@
+{
+    "name": "hyperfine",
+    "version": "1.19.0",
+    "description": "Command-line benchmarking tool",
+    "homepage": "https://github.com/sharkdp/hyperfine",
+    "license": "Apache-2.0/MIT",
+    "url": "https://github.com/sharkdp/hyperfine/releases/download/v1.19.0/hyperfine-1.19.0-x86_64-pc-windows-msvc.zip",
+    "hash": "",
+    "extract_dir": "hyperfine-1.19.0-x86_64-pc-windows-msvc",
+    "bin": ["hyperfine.exe"],
+    "checkver": {
+        "url": "https://github.com/sharkdp/hyperfine/releases",
+        "regex": "v([\\d.]+)"
+    }
+}

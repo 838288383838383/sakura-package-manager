@@ -1,0 +1,14 @@
+{
+    "name": "delta",
+    "version": "0.17.5",
+    "description": "Syntax-highlighting pager for git, diff, and grep output",
+    "homepage": "https://github.com/dandavison/delta",
+    "license": "MIT",
+    "url": "https://github.com/dandavison/delta/releases/download/0.17.5/delta-0.17.5-x86_64-pc-windows-msvc.zip",
+    "hash": "",
+    "bin": ["delta.exe"],
+    "checkver": {
+        "url": "https://github.com/dandavison/delta/releases",
+        "regex": "([\\d.]+)"
+    }
+}

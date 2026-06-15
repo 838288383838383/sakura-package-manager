@@ -1,0 +1,14 @@
+{
+    "name": "eza",
+    "version": "0.18.22",
+    "description": "A modern replacement for ls - features git integration and colors",
+    "homepage": "https://github.com/eza-community/eza",
+    "license": "MIT",
+    "url": "https://github.com/eza-community/eza/releases/download/v0.18.22/eza_x86_64-pc-windows-msvc.zip",
+    "hash": "",
+    "bin": ["eza.exe"],
+    "checkver": {
+        "url": "https://github.com/eza-community/eza/releases",
+        "regex": "v([\\d.]+)"
+    }
+}

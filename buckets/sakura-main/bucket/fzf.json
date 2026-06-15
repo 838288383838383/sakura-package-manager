@@ -1,0 +1,14 @@
+{
+    "name": "fzf",
+    "version": "0.53.0",
+    "description": "Command-line fuzzy finder",
+    "homepage": "https://github.com/junegunn/fzf",
+    "license": "MIT",
+    "url": "https://github.com/junegunn/fzf/releases/download/v0.53.0/fzf-0.53.0-windows_amd64.zip",
+    "hash": "",
+    "bin": ["fzf.exe"],
+    "checkver": {
+        "url": "https://github.com/junegunn/fzf/releases",
+        "regex": "v([\\d.]+)"
+    }
+}

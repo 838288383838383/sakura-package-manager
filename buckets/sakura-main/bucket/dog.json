@@ -1,0 +1,14 @@
+{
+    "name": "dog",
+    "version": "0.1.0",
+    "description": "Modern DNS client - command-line DNS lookup tool",
+    "homepage": "https://github.com/ogham/dog",
+    "license": "EUPL-1.2",
+    "url": "https://github.com/ogham/dog/releases/download/v0.1.0/dog-windows-x86_64-v0.1.0.zip",
+    "hash": "",
+    "bin": ["dog.exe"],
+    "checkver": {
+        "url": "https://github.com/ogham/dog/releases",
+        "regex": "v([\\d.]+)"
+    }
+}

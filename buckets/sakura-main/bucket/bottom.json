@@ -1,0 +1,14 @@
+{
+    "name": "bottom",
+    "version": "0.10.2",
+    "description": "A graphical process/system monitor written in Rust",
+    "homepage": "https://github.com/ClementTsang/bottom",
+    "license": "MIT",
+    "url": "https://github.com/ClementTsang/bottom/releases/download/0.10.2/bottom_x86_64-pc-windows-msvc.zip",
+    "hash": "",
+    "bin": ["btm.exe"],
+    "checkver": {
+        "url": "https://github.com/ClementTsang/bottom/releases",
+        "regex": "([\\d.]+)"
+    }
+}

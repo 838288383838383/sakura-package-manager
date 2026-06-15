@@ -1,0 +1,14 @@
+{
+    "name": "yazi",
+    "version": "0.17.15",
+    "description": "Blazingly fast terminal file manager written in Rust",
+    "homepage": "https://github.com/sxyazi/yazi",
+    "license": "MIT",
+    "url": "https://github.com/sxyazi/yazi/releases/download/v0.17.15/yazi-x86_64-pc-windows-msvc.zip",
+    "hash": "",
+    "bin": ["yazi.exe"],
+    "checkver": {
+        "url": "https://github.com/sxyazi/yazi/releases",
+        "regex": "v([\\d.]+)"
+    }
+}

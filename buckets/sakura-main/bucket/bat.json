@@ -1,0 +1,15 @@
+{
+    "name": "bat",
+    "version": "0.24.0",
+    "description": "A cat(1) clone with wings - syntax highlighting for the terminal",
+    "homepage": "https://github.com/sharkdp/bat",
+    "license": "Apache-2.0/MIT",
+    "url": "https://github.com/sharkdp/bat/releases/download/v0.24.0/bat-v0.24.0-x86_64-pc-windows-msvc.zip",
+    "hash": "",
+    "extract_dir": "bat-v0.24.0-x86_64-pc-windows-msvc",
+    "bin": ["bat.exe"],
+    "checkver": {
+        "url": "https://github.com/sharkdp/bat/releases",
+        "regex": "v([\\d.]+)"
+    }
+}

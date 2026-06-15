@@ -2,7 +2,17 @@
 # Handles JSON app manifests (better than Scoop's!)
 
 function Get-SakuraManifest {
-    param([string]$AppName)
+    param([string]$AppName, [string]$FromBucket = "")
+
+    # If specific bucket requested, only look there
+    if ($FromBucket) {
+        $bucketPath = Join-Path $Script:SakuraBuckets $FromBucket "bucket" "$AppName.json"
+        if (Test-Path $bucketPath) {
+            $content = Get-Content -Path $bucketPath -Raw -Encoding UTF8
+            return $content | ConvertFrom-Json
+        }
+        return $null
+    }
 
     $buckets = Get-ChildItem -Path $Script:SakuraBuckets -Directory -ErrorAction SilentlyContinue
     foreach ($bucket in $buckets) {
@@ -21,6 +31,122 @@ function Get-SakuraManifest {
     }
 
     return $null
+}
+
+function Get-SakuraManifestAll {
+    param([string]$AppName)
+
+    $results = @()
+    $buckets = Get-ChildItem -Path $Script:SakuraBuckets -Directory -ErrorAction SilentlyContinue
+    foreach ($bucket in $buckets) {
+        $manifestPath = Join-Path $bucket.FullName "bucket" "$AppName.json"
+        if (Test-Path $manifestPath) {
+            $content = Get-Content -Path $manifestPath -Raw -Encoding UTF8 | ConvertFrom-Json
+            $results += [PSCustomObject]@{
+                Bucket = $bucket.Name
+                Manifest = $content
+            }
+        }
+    }
+    return $results
+}
+
+function Show-BucketSelection {
+    param(
+        [string]$AppName,
+        [array]$Options
+    )
+
+    if ($Options.Count -eq 1) {
+        return $Options[0]
+    }
+
+    Write-Host ""
+    Write-Host "  📦 Multiple sources found for '$AppName':" -ForegroundColor Yellow
+    Write-Host "  ─────────────────────────────────────────" -ForegroundColor DarkGray
+    Write-Host ""
+
+    $selected = 0
+    $total = $Options.Count
+
+    # Render function
+    function Draw-Menu {
+        param([int]$Highlight)
+        # Move cursor up to redraw
+        if ($Host.UI.RawUI) {
+            for ($i = 0; $i -lt $total; $i++) {
+                Write-Host "`r`e[2K" -NoNewline
+            }
+        }
+
+        for ($i = 0; $i -lt $total; $i++) {
+            $opt = $Options[$i]
+            $marker = if ($i -eq $Highlight) { "  →" } else { "   " }
+            $color = if ($i -eq $Highlight) { "Cyan" } else { "White" }
+            $version = $opt.Manifest.version
+            $desc = $opt.Manifest.description
+            $nonportable = if ($opt.Manifest.nonportable) { " [installer]" } else { "" }
+            Write-Host "`r$marker $($opt.Bucket)/$AppName v$version$nonportable" -ForegroundColor $color
+            Write-Host "`r     └─ $desc" -ForegroundColor DarkGray
+        }
+        Write-Host ""
+        Write-Host "  Use ↑/↓ arrows + Enter, or type bucket name, or 'q' to cancel" -ForegroundColor DarkGray
+    }
+
+    Draw-Menu -Highlight $selected
+
+    # Arrow key input loop
+    while ($true) {
+        $key = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+        switch ($key.VirtualKeyCode) {
+            38 { # Up arrow
+                $selected = if ($selected -gt 0) { $selected - 1 } else { $total - 1 }
+                # Clear and redraw
+                for ($i = 0; $i -lt ($total + 2); $i++) { Write-Host "`r`e[2K" }
+                if ($Host.UI.RawUI.CursorPosition.Y -ge ($total + 2)) {
+                    $Host.UI.RawUI.CursorPosition = @{ X = 0; Y = $Host.UI.RawUI.CursorPosition.Y - ($total + 2) }
+                }
+                Draw-Menu -Highlight $selected
+            }
+            40 { # Down arrow
+                $selected = if ($selected -lt ($total - 1)) { $selected + 1 } else { 0 }
+                for ($i = 0; $i -lt ($total + 2); $i++) { Write-Host "`r`e[2K" }
+                if ($Host.UI.RawUI.CursorPosition.Y -ge ($total + 2)) {
+                    $Host.UI.RawUI.CursorPosition = @{ X = 0; Y = $Host.UI.RawUI.CursorPosition.Y - ($total + 2) }
+                }
+                Draw-Menu -Highlight $selected
+            }
+            13 { # Enter
+                Write-Host ""
+                return $Options[$selected]
+            }
+            27 { # Escape
+                Write-Host ""
+                return $null
+            }
+            default {
+                # If user types a bucket name directly
+                $char = $key.Character
+                if ($char -match '[a-zA-Z0-9\-_]') {
+                    $typed = ""
+                    while ($key.VirtualKeyCode -ne 13 -and $key.VirtualKeyCode -ne 27) {
+                        $typed += $char
+                        Write-Host -NoNewline $char
+                        $key = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+                        $char = $key.Character
+                    }
+                    # Find matching bucket
+                    $match = $Options | Where-Object { $_.Bucket -like "*$typed*" } | Select-Object -First 1
+                    if ($match) {
+                        Write-Host ""
+                        return $match
+                    }
+                    Write-Host ""
+                    Draw-Menu -Highlight $selected
+                }
+            }
+        }
+    }
 }
 
 function Test-SakuraManifest {

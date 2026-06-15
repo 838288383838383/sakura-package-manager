@@ -2,7 +2,10 @@
 # Application installation pipeline
 
 function Install-SakuraApp {
-    param([string]$Name)
+    param(
+        [string]$Name,
+        [string]$FromBucket = ""
+    )
 
     Write-Host ""
     Write-Host "  Installing $Name..." -ForegroundColor Magenta
@@ -15,14 +18,39 @@ function Install-SakuraApp {
         return
     }
 
-    # Resolve manifest
-    $manifest = Get-SakuraManifest -AppName $Name
-    if (-not $manifest) {
+    # Find all available manifests across buckets
+    $allMatches = Get-SakuraManifestAll -AppName $Name
+
+    if ($allMatches.Count -eq 0) {
         Write-SakuraError "App '$Name' not found in any bucket."
         Write-SakuraInfo "Use 'sakura search $Name' to find available packages."
         return
     }
 
+    # If specific bucket requested, use it
+    if ($FromBucket) {
+        $selected = $allMatches | Where-Object { $_.Bucket -eq $FromBucket } | Select-Object -First 1
+        if (-not $selected) {
+            Write-SakuraError "App '$Name' not found in bucket '$FromBucket'."
+            $available = ($allMatches | ForEach-Object { $_.Bucket }) -join ", "
+            Write-SakuraInfo "Available in: $available"
+            return
+        }
+    }
+    # If multiple matches, show interactive selection
+    elseif ($allMatches.Count -gt 1) {
+        $selected = Show-BucketSelection -AppName $Name -Options $allMatches
+        if (-not $selected) {
+            Write-SakuraInfo "Installation cancelled."
+            return
+        }
+    }
+    else {
+        $selected = $allMatches[0]
+    }
+
+    $manifest = $selected.Manifest
+    Write-SakuraInfo "Source: $($selected.Bucket)/bucket"
     Write-SakuraInfo "Found: $($manifest.name) v$($manifest.version)"
     Write-SakuraInfo "$($manifest.description)"
 

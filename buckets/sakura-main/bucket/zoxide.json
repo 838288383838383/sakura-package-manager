@@ -1,0 +1,14 @@
+{
+    "name": "zoxide",
+    "version": "0.9.4",
+    "description": "Smarter cd command - learns your habits",
+    "homepage": "https://github.com/ajeetdsouza/zoxide",
+    "license": "MIT",
+    "url": "https://github.com/ajeetdsouza/zoxide/releases/download/v0.9.4/zoxide-0.9.4-x86_64-pc-windows-msvc.zip",
+    "hash": "",
+    "bin": ["zoxide.exe"],
+    "checkver": {
+        "url": "https://github.com/ajeetdsouza/zoxide/releases",
+        "regex": "v([\\d.]+)"
+    }
+}

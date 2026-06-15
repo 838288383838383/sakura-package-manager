@@ -1,0 +1,14 @@
+{
+    "name": "yq",
+    "version": "4.44.2",
+    "description": "Portable command-line YAML, JSON, XML processor",
+    "homepage": "https://github.com/mikefarah/yq",
+    "license": "MIT",
+    "url": "https://github.com/mikefarah/yq/releases/download/v4.44.2/yq_windows_amd64.exe",
+    "hash": "",
+    "bin": ["yq_windows_amd64.exe"],
+    "checkver": {
+        "url": "https://github.com/mikefarah/yq/releases",
+        "regex": "v([\\d.]+)"
+    }
+}

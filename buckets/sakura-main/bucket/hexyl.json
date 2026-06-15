@@ -1,0 +1,15 @@
+{
+    "name": "hexyl",
+    "version": "0.16.0",
+    "description": "Command-line hex viewer - like xxd but with colors",
+    "homepage": "https://github.com/sharkdp/hexyl",
+    "license": "Apache-2.0/MIT",
+    "url": "https://github.com/sharkdp/hexyl/releases/download/v0.16.0/hexyl-0.16.0-x86_64-pc-windows-msvc.zip",
+    "hash": "",
+    "extract_dir": "hexyl-0.16.0-x86_64-pc-windows-msvc",
+    "bin": ["hexyl.exe"],
+    "checkver": {
+        "url": "https://github.com/sharkdp/hexyl/releases",
+        "regex": "v([\\d.]+)"
+    }
+}

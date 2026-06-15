@@ -1,0 +1,14 @@
+{
+    "name": "procs",
+    "version": "0.14.7",
+    "description": "A modern replacement for ps - colorized process viewer",
+    "homepage": "https://github.com/dalance/procs",
+    "license": "MIT",
+    "url": "https://github.com/dalance/procs/releases/download/v0.14.7/procs-v0.14.7-x86_64-pc-windows-msvc.zip",
+    "hash": "",
+    "bin": ["procs.exe"],
+    "checkver": {
+        "url": "https://github.com/dalance/procs/releases",
+        "regex": "v([\\d.]+)"
+    }
+}

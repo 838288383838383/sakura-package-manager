@@ -1,0 +1,15 @@
+{
+    "name": "aria2",
+    "version": "1.37.0",
+    "description": "Lightweight multi-protocol & multi-source command-line download utility",
+    "homepage": "https://aria2.github.io",
+    "license": "GPL-2.0",
+    "url": "https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0-win-64bit-build1.zip",
+    "hash": "",
+    "extract_dir": "aria2-1.37.0-win-64bit-build1",
+    "bin": ["aria2c.exe"],
+    "checkver": {
+        "url": "https://github.com/aria2/aria2/releases",
+        "regex": "release-([\\d.]+)"
+    }
+}

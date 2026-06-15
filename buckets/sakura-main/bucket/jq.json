@@ -1,0 +1,14 @@
+{
+    "name": "jq",
+    "version": "1.7.1",
+    "description": "Command-line JSON processor",
+    "homepage": "https://jqlang.github.io/jq",
+    "license": "MIT",
+    "url": "https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-win64.exe",
+    "hash": "",
+    "bin": ["jq-win64.exe"],
+    "checkver": {
+        "url": "https://github.com/jqlang/jq/releases",
+        "regex": "jq-([\\d.]+)"
+    }
+}

@@ -20,7 +20,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $SakuraRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
-$SakuraVersion = "0.2.0"
+$SakuraVersion = "2.0.1"
 
 # Load core libraries
 . "$SakuraRoot\lib\core.ps1"
@@ -62,30 +62,31 @@ function Show-Help {
     Write-Host "`n  Usage: sakura <command> [arguments]" -ForegroundColor Cyan
     Write-Host "         sak <command> [arguments]  (short alias)" -ForegroundColor DarkGray
     Write-Host "`n  Package Commands:" -ForegroundColor Yellow
-    Write-Host "    install <app>      Install an application"
-    Write-Host "    uninstall <app>    Remove an application"
-    Write-Host "    update [app]       Update app(s) or all"
-    Write-Host "    search <query>     Search for applications"
-    Write-Host "    list               List installed apps"
-    Write-Host "    info <app>         Show app information"
-    Write-Host "    upgrade            Upgrade all apps"
+    Write-Host "    install <app> [-viab <bucket>]  Install an app from a specific bucket"
+    Write-Host "    uninstall <app>                Remove an application"
+    Write-Host "    update [app]                   Update app(s) or all"
+    Write-Host "    search <query>                 Search for applications"
+    Write-Host "    list                           List installed apps"
+    Write-Host "    info <app>                     Show app information"
+    Write-Host "    upgrade                        Upgrade all apps"
     Write-Host "`n  Bucket Commands:" -ForegroundColor Yellow
-    Write-Host "    bucket list        List added buckets"
-    Write-Host "    bucket add <name>  Add a bucket"
-    Write-Host "    bucket rm <name>   Remove a bucket"
+    Write-Host "    bucket list                    List added buckets"
+    Write-Host "    bucket add <name>              Add a bucket"
+    Write-Host "    bucket rm <name>               Remove a bucket"
     Write-Host "`n  Pet Commands:" -ForegroundColor Yellow
-    Write-Host "    pet                Interact with your pet"
-    Write-Host "    pet status         Check pet status"
-    Write-Host "    pet feed           Feed your pet"
-    Write-Host "    pet play           Play with your pet"
-    Write-Host "    pet evolve         Check evolution progress"
+    Write-Host "    pet                            Interact with your pet"
+    Write-Host "    pet feed/play/nap/pet          Pet interactions"
+    Write-Host "    pet evolve                     Check evolution progress"
     Write-Host "`n  Config Commands:" -ForegroundColor Yellow
-    Write-Host "    config get <key>   Get a config value"
-    Write-Host "    config set <k> <v> Set a config value"
-    Write-Host "    config list        List all config"
+    Write-Host "    config get/set/list            Manage configuration"
     Write-Host "`n  Other:" -ForegroundColor Yellow
-    Write-Host "    version            Show version"
-    Write-Host "    help               Show this help"
+    Write-Host "    version                        Show version"
+    Write-Host "    help                           Show this help"
+    Write-Host ""
+    Write-Host "  Examples:" -ForegroundColor Cyan
+    Write-Host "    sak install git                Install from best source"
+    Write-Host "    sak install obsidian -viab nonportable  Install MSI/EXE version"
+    Write-Host "    sak install vim -viab sakura-main       Force specific bucket"
     Write-Host ""
 }
 
@@ -96,9 +97,26 @@ switch ($Command.ToLower()) {
             Write-Host "Error: No app specified. Usage: sakura install <app>" -ForegroundColor Red
             exit 1
         }
-        foreach ($app in $Arguments) {
-            Install-SakuraApp -Name $app
+        $appName = $null
+        $fromBucket = ""
+        for ($i = 0; $i -lt $Arguments.Count; $i++) {
+            if ($Arguments[$i] -eq "-viab" -or $Arguments[$i] -eq "--via-bucket") {
+                if ($i + 1 -lt $Arguments.Count) {
+                    $fromBucket = $Arguments[$i + 1]
+                    $i++
+                } else {
+                    Write-Host "Error: -viab requires a bucket name" -ForegroundColor Red
+                    exit 1
+                }
+            } elseif (-not $Arguments[$i].StartsWith("-")) {
+                $appName = $Arguments[$i]
+            }
         }
+        if (-not $appName) {
+            Write-Host "Error: No app specified." -ForegroundColor Red
+            exit 1
+        }
+        Install-SakuraApp -Name $appName -FromBucket $fromBucket
     }
     { $_ -in @("uninstall", "rm", "remove") } {
         if ($Arguments.Count -eq 0) {
