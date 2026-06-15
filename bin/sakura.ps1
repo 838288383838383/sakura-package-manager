@@ -20,7 +20,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $SakuraRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
-$SakuraVersion = "0.1.0"
+$SakuraVersion = "0.2.0"
 
 # Load core libraries
 . "$SakuraRoot\lib\core.ps1"
@@ -60,6 +60,7 @@ function Show-Banner {
 function Show-Help {
     Show-Banner
     Write-Host "`n  Usage: sakura <command> [arguments]" -ForegroundColor Cyan
+    Write-Host "         sak <command> [arguments]  (short alias)" -ForegroundColor DarkGray
     Write-Host "`n  Package Commands:" -ForegroundColor Yellow
     Write-Host "    install <app>      Install an application"
     Write-Host "    uninstall <app>    Remove an application"

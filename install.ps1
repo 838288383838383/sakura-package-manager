@@ -118,13 +118,23 @@ powershell -ExecutionPolicy Bypass -File "$sakuraCmd" %*
 "@
 Set-Content -Path $sakuraShim -Value $shimContent -Encoding ASCII
 
+# Create sak (short alias)
+$sakShim = "$InstallDir\shims\sak.cmd"
+$sakContent = @"
+@echo off
+powershell -ExecutionPolicy Bypass -File "$sakuraCmd" %*
+"@
+Set-Content -Path $sakShim -Value $sakContent -Encoding ASCII
+
 Write-Host "`n  ✅ Installation complete!" -ForegroundColor Green
 Write-Host ""
 Write-Host "  Usage:" -ForegroundColor Yellow
-Write-Host "    sakura help          Show help" -ForegroundColor White
-Write-Host "    sakura install <app> Install an app" -ForegroundColor White
-Write-Host "    sakura pet           Meet your new companion!" -ForegroundColor White
+Write-Host "    sakura help          Show help (or just 'sak')" -ForegroundColor White
+Write-Host "    sak install <app>    Install an app" -ForegroundColor White
+Write-Host "    sak pet              Meet your new companion!" -ForegroundColor White
+Write-Host ""
+Write-Host "  Both 'sakura' and 'sak' work - use whichever you prefer!" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "  🌸 Your pet Sakura-chan is waiting to meet you!" -ForegroundColor Magenta
-Write-Host "     Run 'sakura pet' to say hello!" -ForegroundColor Magenta
+Write-Host "     Run 'sak pet' to say hello!" -ForegroundColor Magenta
 Write-Host ""
