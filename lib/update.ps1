@@ -104,7 +104,7 @@ function Update-SakuraSelf {
     Write-Host "  Updating Sakura Package Manager..." -ForegroundColor Magenta
     Write-Host "  =====================================" -ForegroundColor DarkGray
 
-    $sakuraHome = Split-Path -Parent $Script:SakuraRoot
+    $sakuraHome = $Script:SakuraRoot
     $repoUrl = "https://github.com/838288383838383/sakura-package-manager/archive/refs/heads/main.zip"
     $zipPath = Join-Path $env:TEMP "sakura_update.zip"
     $extractPath = Join-Path $env:TEMP "sakura_update_extract"
