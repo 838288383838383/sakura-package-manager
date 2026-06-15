@@ -1,6 +1,62 @@
 # Sakura Install System
 # Application installation pipeline
 
+function Test-InstallConflict {
+    param([string]$AppName)
+
+    $conflicts = @()
+
+    # Check Scoop
+    $scoopCheck = Get-Command scoop -ErrorAction SilentlyContinue
+    if ($scoopCheck) {
+        $scoopApps = scoop list 2>&1 | Out-String
+        if ($scoopApps -match "(?i)$AppName") {
+            $conflicts += "Scoop (already installed)"
+        }
+    }
+
+    # Check Chocolatey
+    $chocoCheck = Get-Command choco -ErrorAction SilentlyContinue
+    if ($chocoCheck) {
+        $chocoApps = choco list --local-only 2>&1 | Out-String
+        if ($chocoApps -match "(?i)$AppName") {
+            $conflicts += "Chocolatey (already installed)"
+        }
+    }
+
+    # Check winget
+    $wingetCheck = Get-Command winget -ErrorAction SilentlyContinue
+    if ($wingetCheck) {
+        $wingetApps = winget list --name $AppName 2>&1 | Out-String
+        if ($wingetApps -match "(?i)$AppName") {
+            $conflicts += "winget (already installed)"
+        }
+    }
+
+    # Check common Program Files locations
+    $pfPaths = @(
+        "${env:ProgramFiles}\$AppName",
+        "${env:ProgramFiles(x86)}\$AppName",
+        "$env:LOCALAPPDATA\$AppName"
+    )
+    foreach ($p in $pfPaths) {
+        if (Test-Path $p) {
+            $conflicts += "Manual install at: $p"
+        }
+    }
+
+    # Check if command exists in PATH
+    $cmdCheck = Get-Command $AppName -ErrorAction SilentlyContinue
+    if ($cmdCheck) {
+        $cmdPath = $cmdCheck.Source
+        if ($cmdPath -and $cmdPath -notlike "*$env:USERPROFILE\.sakura*") {
+            $conflicts += "Command exists at: $cmdPath"
+        }
+    }
+
+    return $conflicts
+}
+
 function Install-SakuraApp {
     param(
         [string]$Name,
@@ -51,8 +107,25 @@ function Install-SakuraApp {
 
     $manifest = $selected.Manifest
     Write-SakuraInfo "Source: $($selected.Bucket)/bucket"
-    Write-SakuraInfo "Found: $($manifest.name) v$($manifest.version)"
-    Write-SakuraInfo "$($manifest.description)"
+    Write-Host "  Found: $($manifest.name) v$($manifest.version)" -ForegroundColor White
+    Write-Host "  $($manifest.description)" -ForegroundColor DarkGray
+
+    # Check for conflicts
+    $conflicts = Test-InstallConflict -AppName $Name
+    if ($conflicts.Count -gt 0) {
+        Write-Host ""
+        Write-Host "  Potential conflicts detected:" -ForegroundColor Yellow
+        foreach ($c in $conflicts) {
+            Write-Host "    - $c" -ForegroundColor Yellow
+        }
+        Write-Host ""
+        $answer = Read-Host "  Continue anyway? (y/n)"
+        if ($answer -ne "y" -and $answer -ne "Y") {
+            Write-Host "  Installation cancelled." -ForegroundColor DarkGray
+            return
+        }
+        Write-Host ""
+    }
 
     # Handle WSL distros
     if ($manifest.wsl) {
