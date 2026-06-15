@@ -1,0 +1,19 @@
+{
+    "name": "chafa",
+    "version": "1.14.0",
+    "description": "Terminal graphics and image viewer with support for various formats",
+    "homepage": "https://github.com/hpjansson/chafa",
+    "license": "LGPL-2.1",
+    "url": "https://github.com/hpjansson/chafa/releases/download/v1.14.0/chafa-1.14.0-win64.zip",
+    "hash": "",
+    "extract_dir": "chafa-1.14.0-win64",
+    "bin": ["chafa.exe"],
+    "description_detail": "Chafa is a command-line terminal graphics viewer. It can display images in the terminal using half-block characters, braille, Sixel, Kitty graphics protocol, and more. Perfect for displaying your Sakura pet in the terminal!",
+    "checkver": {
+        "url": "https://github.com/hpjansson/chafa/releases",
+        "regex": "v([\\d.]+)"
+    },
+    "suggest": {
+        "imagemagick": "For advanced image processing"
+    }
+}
