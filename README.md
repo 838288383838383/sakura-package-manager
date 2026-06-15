@@ -4,6 +4,8 @@
 
 Sakura is a modern, user-friendly package manager for Windows, inspired by Scoop but with a twist — it comes with a built-in Tamagotchi pet that grows and evolves as you use the package manager!
 
+Use `sak` (short alias) or `sakura` — both work identically.
+
 ## ✨ Features
 
 ### Package Management
@@ -15,6 +17,7 @@ Sakura is a modern, user-friendly package manager for Windows, inspired by Scoop
 - 🏷️ **Bucket system** - Git-based package repositories
 - 🔐 **Hash verification** - Secure package integrity checks
 - 🛡️ **Isolated installs** - No conflicts, no admin required
+- 🚂 **Built-in sl** - Choo choo!
 
 ### 🌸 Tamagotchi Pet System
 Meet **Sakura-chan**, your digital companion!
@@ -34,31 +37,51 @@ Meet **Sakura-chan**, your digital companion!
 ### Installation
 
 ```powershell
-# Clone or download Sakura
-git clone https://github.com/yourusername/sakura.git
+# Clone the repo
+git clone https://github.com/838288383838383/sakura-package-manager.git
 
 # Run the installer
-cd sakura
+cd sakura-package-manager
 .\install.ps1
+```
+
+Or use the one-liner:
+```powershell
+iex (iwr -useb https://raw.githubusercontent.com/838288383838383/sakura-package-manager/main/install.ps1).Content
 ```
 
 ### First Steps
 
 ```powershell
 # Get help
-sakura help
+sak help
 
 # Meet your pet!
-sakura pet
+sak pet
+
+# Add the community bucket
+sak bucket add community
+
+# Add nonportable apps (MSI/EXE)
+sak bucket add nonportable
 
 # Search for a package
-sakura search git
+sak search git
 
 # Install a package
-sakura install git
+sak install git
+
+# Install with LazyVim (auto-prompted)
+sak install neovim
+
+# Install a non-portable app
+sak install vscode -viab nonportable
 
 # Check your pet after installing
-sakura pet
+sak pet
+
+# See a train (mistype on purpose!)
+sak sl
 ```
 
 ## 📖 Commands
@@ -67,40 +90,61 @@ sakura pet
 
 | Command | Description |
 |---------|-------------|
-| `sakura install <app>` | Install an application |
-| `sakura uninstall <app>` | Remove an application |
-| `sakura update [app]` | Check for updates |
-| `sakura upgrade` | Update all installed apps |
-| `sakura search <query>` | Search available packages |
-| `sakura list` | List installed apps |
-| `sakura info <app>` | Show app information |
+| `sak install <app>` | Install an application |
+| `sak install <app> -viab <bucket>` | Install from specific bucket |
+| `sak uninstall <app>` | Remove an application |
+| `sak update [app]` | Check for updates |
+| `sak update -sak` | Update Sakura itself |
+| `sak upgrade` | Update all installed apps |
+| `sak search <query>` | Search available packages |
+| `sak list` | List installed apps |
+| `sak info <app>` | Show app information |
 
 ### Bucket Commands
 
 | Command | Description |
 |---------|-------------|
-| `sakura bucket list` | List added buckets |
-| `sakura bucket add <name>` | Add a bucket |
-| `sakura bucket rm <name>` | Remove a bucket |
+| `sak bucket list` | List added buckets |
+| `sak bucket add <name>` | Add a bucket (auto-clones from GitHub) |
+| `sak bucket rm <name>` | Remove a bucket |
+
+Built-in buckets:
+- `community` - Community-maintained portable apps
+- `nonportable` - MSI/EXE installer-based apps
 
 ### Pet Commands
 
 | Command | Description |
 |---------|-------------|
-| `sakura pet` | Show your pet's status |
-| `sakura pet feed` | Feed your pet |
-| `sakura pet play` | Play with your pet |
-| `sakura pet pet` | Pet your companion |
-| `sakura pet nap` | Let your pet rest |
-| `sakura pet evolve` | Check evolution progress |
+| `sak pet` | Show your pet's status |
+| `sak pet feed` | Feed your pet |
+| `sak pet play` | Play with your pet |
+| `sak pet pet` | Pet your companion |
+| `sak pet nap` | Let your pet rest |
+| `sak pet evolve` | Check evolution progress |
+
+### Self Update
+
+| Command | Description |
+|---------|-------------|
+| `sak updt` | Update Sakura from GitHub |
+| `sak update -sak` | Same thing, short form |
+
+### Fun Commands
+
+| Command | Description |
+|---------|-------------|
+| `sak sl` | All aboard! Choo choo! 🚂 |
+| `sak train` | Same as sl |
+| `sak choo` | Same as sl |
 
 ### Config Commands
 
 | Command | Description |
 |---------|-------------|
-| `sakura config get <key>` | Get a config value |
-| `sakura config set <key> <value>` | Set a config value |
-| `sakura config list` | Show all config |
+| `sak config get <key>` | Get a config value |
+| `sak config set <key> <value>` | Set a config value |
+| `sak config list` | Show all config |
 
 ## 🐱 Your Pet
 
@@ -149,8 +193,12 @@ Unlock achievements by using Sakura:
 ├── apps/           # Installed applications
 ├── shims/          # Command shims
 ├── buckets/        # Package repositories
-│   └── sakura-main/
-│       └── bucket/ # Manifest files
+│   ├── sakura-main/
+│   │   └── bucket/ # Portable app manifests
+│   ├── community/
+│   │   └── bucket/ # Community apps
+│   └── sakura-nonportable/
+│       └── bucket/ # MSI/EXE installers
 ├── cache/          # Download cache
 ├── persist/        # Persistent app data
 ├── data/           # Sakura data
@@ -180,6 +228,21 @@ Each app is defined by a JSON manifest:
 }
 ```
 
+For non-portable apps:
+```json
+{
+    "name": "my-app",
+    "version": "1.0.0",
+    "nonportable": true,
+    "url": "https://example.com/Setup.exe",
+    "installer": {
+        "type": "inno",
+        "args": ["/S"],
+        "admin": false
+    }
+}
+```
+
 ## 🎮 Why Sakura?
 
 Unlike other package managers:
@@ -189,6 +252,9 @@ Unlike other package managers:
 - **No admin needed** - Installs to your user directory
 - **Isolated** - No conflicts between apps
 - **Clean** - No registry pollution
+- **Buckets** - Multiple package sources with arrow-key picker
+- **Nonportable support** - Handles MSI/EXE installers too
+- **Built-in train** - `sak sl` 🚂
 
 ## 📝 License
 
