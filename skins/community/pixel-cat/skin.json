@@ -1,0 +1,45 @@
+{
+    "name": "pixel-cat",
+    "author": "Community",
+    "version": "1.0.0",
+    "description": "A pixel art cat companion",
+    "type": "pet",
+    "species": "pixel-cat",
+    "colors": {
+        "primary": "#FFD700",
+        "secondary": "#FFA500",
+        "accent": "#FF6347",
+        "text": "#FFFFFF",
+        "background": "#2D2D2D"
+    },
+    "ascii_art": {
+        "baby": [
+            "  /\\_/\\  ",
+            " ( o.o ) ",
+            "  > ^ <  ",
+            " /|   |\\",
+            "(_|   |_)"
+        ],
+        "kitten": [
+            "  /\\_/\\  ",
+            " ( o.o ) ",
+            "  >ω<   ",
+            " /|   |\\",
+            "(_|   |_)"
+        ],
+        "cat": [
+            "  /\\_/\\  ",
+            " ( o.o ) ",
+            "  =^.^=  ",
+            " /|   |\\",
+            "(_|   |_)"
+        ],
+        "elder_cat": [
+            "  /\\_/\\  ",
+            " ( O.O ) ",
+            "  =^.^=  ",
+            " /|   |\\",
+            "(_|   |_)"
+        ]
+    }
+}

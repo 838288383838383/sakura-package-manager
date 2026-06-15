@@ -1,0 +1,47 @@
+{
+    "name": "cyber-dragon",
+    "author": "Community",
+    "version": "1.0.0",
+    "description": "A cyberpunk dragon companion",
+    "type": "pet",
+    "species": "cyber-dragon",
+    "colors": {
+        "primary": "#00FFFF",
+        "secondary": "#FF00FF",
+        "accent": "#00FF00",
+        "text": "#00FF00",
+        "background": "#0A0A0A"
+    },
+    "ascii_art": {
+        "baby": [
+            "    /\\  ",
+            "   /  \\ ",
+            "  (o.o) ",
+            "   \\_/  ",
+            "  /| |\\ "
+        ],
+        "young": [
+            "   /\\  ",
+            "  /  \\ ",
+            " (o.o) ",
+            "  /^^\\ ",
+            " /|  |\\"
+        ],
+        "adult": [
+            "  /\\  /\\ ",
+            " /  \\/  \\",
+            "(  O O  )",
+            "  \\ == / ",
+            "   /||\\  ",
+            "  / || \\ "
+        ],
+        "elder": [
+            " /\\    /\\",
+            "/  \\  /  \\",
+            "(   <>   )",
+            " \\  \\/  / ",
+            "  \\ || /  ",
+            "   \\||/   "
+        ]
+    }
+}
