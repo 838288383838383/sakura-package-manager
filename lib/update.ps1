@@ -113,7 +113,9 @@ function Update-SakuraSelf {
     Write-SakuraProgress "Checking for updates..."
 
     if ($hasGit) {
-        # Git update
+        # Try git update
+        Write-SakuraProgress "Trying git update..."
+        $gitOk = $false
         try {
             $ProgressPreference = 'SilentlyContinue'
             $ErrorActionPreference = 'SilentlyContinue'
@@ -122,111 +124,130 @@ function Update-SakuraSelf {
             $remote = git -C $sakuraHome rev-parse origin/main 2>&1
             $ErrorActionPreference = 'Stop'
 
-            if ($local -eq $remote) {
-                Write-SakuraSuccess "Sakura is already up to date! (v$SakuraVersion)"
+            if ($local -and $remote -and $local -ne $remote) {
+                Write-Host ""
+                Write-Host "  Updates available:" -ForegroundColor Yellow
+                $commits = git -C $sakuraHome log --oneline "$local..$remote" 2>&1
+                foreach ($commit in $commits) {
+                    if ($commit -notmatch "^warning:|^error:") {
+                        Write-Host "    - $commit" -ForegroundColor DarkGray
+                    }
+                }
+                Write-Host ""
+
+                # Backup
+                $backupDir = Join-Path $env:TEMP "sakura_backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+                New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
+                Copy-Item -Path "$sakuraHome\lib\*" -Destination "$backupDir" -Recurse -Force
+                Copy-Item -Path "$sakuraHome\bin\*" -Destination "$backupDir" -Recurse -Force
+                Copy-Item -Path "$sakuraHome\modules" -Destination "$backupDir" -Recurse -Force
+                Write-SakuraInfo "Backup saved to: $backupDir"
+
+                # Pull
+                Write-SakuraProgress "Pulling update..."
+                git -C $sakuraHome pull origin main 2>&1 | Out-Null
+
+                # Recreate shims
+                $shimsDir = Join-Path $sakuraHome "shims"
+                if (-not (Test-Path $shimsDir)) { cmd /c mkdir "$shimsDir" 2>&1 | Out-Null }
+                $sakuraCmd = Join-Path $sakuraHome "bin\sakura.ps1"
+                $bat = "@echo off`r`npowershell -NoProfile -ExecutionPolicy Bypass -File `"%~dp0..\bin\sakura.ps1`" %*"
+                [System.IO.File]::WriteAllText("$shimsDir\sakura.cmd", $bat, [System.Text.Encoding]::ASCII)
+                [System.IO.File]::WriteAllText("$shimsDir\sak.cmd", $bat, [System.Text.Encoding]::ASCII)
+
+                Write-Host ""
+                Write-Host "  Sakura updated!" -ForegroundColor Green
+                $gitOk = $true
+            } elseif ($local -and $remote -and $local -eq $remote) {
+                Write-Host ""
+                Write-Host "  Already latest version! (v$SakuraVersion)" -ForegroundColor Green
                 Write-Host ""
                 return
             }
-
-            Write-Host ""
-            Write-Host "  Updates available:" -ForegroundColor Yellow
-            $commits = git -C $sakuraHome log --oneline "$local..$remote" 2>&1
-            foreach ($commit in $commits) {
-                if ($commit -notmatch "^warning:|^error:") {
-                    Write-Host "    - $commit" -ForegroundColor DarkGray
-                }
-            }
-            Write-Host ""
-
-            # Backup
-            $backupDir = Join-Path $env:TEMP "sakura_backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
-            New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
-            Copy-Item -Path "$sakuraHome\lib\*" -Destination "$backupDir" -Recurse -Force
-            Copy-Item -Path "$sakuraHome\bin\*" -Destination "$backupDir" -Recurse -Force
-            Copy-Item -Path "$sakuraHome\modules" -Destination "$backupDir" -Recurse -Force
-            Write-SakuraInfo "Backup saved to: $backupDir"
-
-            # Pull
-            Write-SakuraProgress "Pulling update..."
-            git -C $sakuraHome pull origin main 2>&1 | Out-Null
-
-            Write-Host ""
-            Write-Host "  Sakura updated!" -ForegroundColor Green
         } catch {
-            Write-SakuraError "Git update failed: $_"
-            return
-        }
-    } else {
-        # Zip update (no git)
-        Write-SakuraProgress "Downloading update..."
-        $ProgressPreference = 'SilentlyContinue'
-        try {
-            if (Test-Path $extractPath) { Remove-Item -Recurse -Force $extractPath }
-            Invoke-WebRequest -Uri $repoUrl -OutFile $zipPath -UseBasicParsing
-        } catch {
-            Write-SakuraError "Download failed: $_"
-            return
-        }
-
-        Write-SakuraProgress "Extracting..."
-        Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
-        Remove-Item -Force $zipPath -ErrorAction SilentlyContinue
-
-        $src = Join-Path $extractPath "sakura-package-manager-main"
-        if (-not (Test-Path $src)) {
-            Write-SakuraError "Bad zip structure"
-            Remove-Item -Recurse -Force $extractPath -ErrorAction SilentlyContinue
-            return
-        }
-
-        # Check remote version
-        $remoteVersion = "unknown"
-        $sakuraPs1 = Join-Path $src "bin\sakura.ps1"
-        if (Test-Path $sakuraPs1) {
-            $content = Get-Content -Path $sakuraPs1 -Raw
-            if ($content -match 'SakuraVersion\s*=\s*"(.+?)"') {
-                $remoteVersion = $Matches[1]
-            }
-        }
-
-        if ($remoteVersion -eq $SakuraVersion) {
             Write-Host ""
-            Write-Host "  Already latest version! (v$SakuraVersion)" -ForegroundColor Green
-            Write-Host ""
-            Remove-Item -Recurse -Force $extractPath -ErrorAction SilentlyContinue
-            return
+            Write-Host "  Git failed, trying download..." -ForegroundColor Yellow
         }
 
-        Write-Host ""
-        Write-Host "  Update available: v$SakuraVersion -> v$remoteVersion" -ForegroundColor Yellow
-        Write-Host ""
-
-        # Backup
-        $backupDir = Join-Path $env:TEMP "sakura_backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
-        New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
-        Copy-Item -Path "$sakuraHome\lib\*" -Destination "$backupDir" -Recurse -Force
-        Copy-Item -Path "$sakuraHome\bin\*" -Destination "$backupDir" -Recurse -Force
-        Copy-Item -Path "$sakuraHome\modules" -Destination "$backupDir" -Recurse -Force
-        Write-SakuraInfo "Backup saved to: $backupDir"
-
-        # Copy files
-        Copy-Item -Path "$src\lib\*" -Destination "$sakuraHome\lib" -Recurse -Force
-        Copy-Item -Path "$src\bin\*" -Destination "$sakuraHome\bin" -Recurse -Force
-        Copy-Item -Path "$src\modules\*" -Destination "$sakuraHome\modules" -Recurse -Force
-
-        # Recreate shims
-        $shimsDir = Join-Path $sakuraHome "shims"
-        if (-not (Test-Path $shimsDir)) { cmd /c mkdir "$shimsDir" 2>&1 | Out-Null }
-        $sakuraCmd = Join-Path $sakuraHome "bin\sakura.ps1"
-        $bat = "@echo off`r`npowershell -NoProfile -ExecutionPolicy Bypass -File `"%~dp0..\bin\sakura.ps1`" %*"
-        [System.IO.File]::WriteAllText("$shimsDir\sakura.cmd", $bat, [System.Text.Encoding]::ASCII)
-        [System.IO.File]::WriteAllText("$shimsDir\sak.cmd", $bat, [System.Text.Encoding]::ASCII)
-
-        Remove-Item -Recurse -Force $extractPath -ErrorAction SilentlyContinue
-
-        Write-Host ""
-        Write-Host "  Sakura updated!" -ForegroundColor Green
+        if ($gitOk) {
+            Write-Host ""
+            Write-Host "  Restart terminal or run: sak version" -ForegroundColor Yellow
+            Write-Host ""
+            Add-PetExperience -Amount 50 -Reason "Updated Sakura itself"
+            return
+        }
+        # Fall through to zip update
     }
+
+    # Zip update
+    Write-SakuraProgress "Downloading update..."
+    $ProgressPreference = 'SilentlyContinue'
+    try {
+        if (Test-Path $extractPath) { Remove-Item -Recurse -Force $extractPath }
+        Invoke-WebRequest -Uri $repoUrl -OutFile $zipPath -UseBasicParsing
+    } catch {
+        Write-SakuraError "Download failed: $_"
+        return
+    }
+
+    Write-SakuraProgress "Extracting..."
+    Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
+    Remove-Item -Force $zipPath -ErrorAction SilentlyContinue
+
+    $src = Join-Path $extractPath "sakura-package-manager-main"
+    if (-not (Test-Path $src)) {
+        Write-SakuraError "Bad zip structure"
+        Remove-Item -Recurse -Force $extractPath -ErrorAction SilentlyContinue
+        return
+    }
+
+    # Check remote version
+    $remoteVersion = "unknown"
+    $sakuraPs1 = Join-Path $src "bin\sakura.ps1"
+    if (Test-Path $sakuraPs1) {
+        $content = Get-Content -Path $sakuraPs1 -Raw
+        if ($content -match 'SakuraVersion\s*=\s*"(.+?)"') {
+            $remoteVersion = $Matches[1]
+        }
+    }
+
+    if ($remoteVersion -eq $SakuraVersion) {
+        Write-Host ""
+        Write-Host "  Already latest version! (v$SakuraVersion)" -ForegroundColor Green
+        Write-Host ""
+        Remove-Item -Recurse -Force $extractPath -ErrorAction SilentlyContinue
+        return
+    }
+
+    Write-Host ""
+    Write-Host "  Update available: v$SakuraVersion -> v$remoteVersion" -ForegroundColor Yellow
+    Write-Host ""
+
+    # Backup
+    $backupDir = Join-Path $env:TEMP "sakura_backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+    New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
+    Copy-Item -Path "$sakuraHome\lib\*" -Destination "$backupDir" -Recurse -Force
+    Copy-Item -Path "$sakuraHome\bin\*" -Destination "$backupDir" -Recurse -Force
+    Copy-Item -Path "$sakuraHome\modules" -Destination "$backupDir" -Recurse -Force
+    Write-SakuraInfo "Backup saved to: $backupDir"
+
+    # Copy files
+    Copy-Item -Path "$src\lib\*" -Destination "$sakuraHome\lib" -Recurse -Force
+    Copy-Item -Path "$src\bin\*" -Destination "$sakuraHome\bin" -Recurse -Force
+    Copy-Item -Path "$src\modules\*" -Destination "$sakuraHome\modules" -Recurse -Force
+
+    # Recreate shims
+    $shimsDir = Join-Path $sakuraHome "shims"
+    if (-not (Test-Path $shimsDir)) { cmd /c mkdir "$shimsDir" 2>&1 | Out-Null }
+    $sakuraCmd = Join-Path $sakuraHome "bin\sakura.ps1"
+    $bat = "@echo off`r`npowershell -NoProfile -ExecutionPolicy Bypass -File `"%~dp0..\bin\sakura.ps1`" %*"
+    [System.IO.File]::WriteAllText("$shimsDir\sakura.cmd", $bat, [System.Text.Encoding]::ASCII)
+    [System.IO.File]::WriteAllText("$shimsDir\sak.cmd", $bat, [System.Text.Encoding]::ASCII)
+
+    Remove-Item -Recurse -Force $extractPath -ErrorAction SilentlyContinue
+
+    Write-Host ""
+    Write-Host "  Sakura updated!" -ForegroundColor Green
 
     Write-Host ""
     Write-Host "  Restart terminal or run: sak version" -ForegroundColor Yellow
