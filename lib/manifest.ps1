@@ -144,12 +144,12 @@ function Show-BucketSelection {
 function Test-SakuraManifest {
     param(
         [string]$AppName,
-        [hashtable]$Manifest
+        $Manifest
     )
 
     $required = @("name", "version", "url")
     foreach ($field in $required) {
-        if (-not $Manifest.ContainsKey($field)) {
+        if (-not $Manifest.PSObject.Properties[$field]) {
             Write-SakuraError "Manifest for '$AppName' missing required field: $field"
             return $false
         }

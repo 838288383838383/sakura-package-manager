@@ -5,7 +5,7 @@
     "homepage": "https://github.com/838288383838383/sakura-editor",
     "license": "MIT",
     "url": "https://github.com/838288383838383/sakura-editor/releases/download/v0.1.0/sakura-editor-v0.1.0-win64.zip",
-    "hash": "5BBAF66F29768C63009E1B7068882EB4B391A8D8F990AB9E23F8673E92C88015",
+    "hash": "A8A45CF5C4E5DE332C3F68B9EDEAFF7D06251BC094E730FDBE22313DA2A6AE4E",
     "extract_dir": ".",
     "bin": "sakura-editor.exe",
     "shortcuts": [

@@ -5,7 +5,7 @@ $distros = @("ubuntu-sakura", "arch-sakura", "fedora-sakura", "alpine-sakura", "
 
 foreach ($distro in $distros) {
     Write-Host ""
-    Write-Host "🌸 Building $distro..." -ForegroundColor Magenta
+    Write-Host "  🌸 Building $distro..." -ForegroundColor Magenta
     Write-Host "═══════════════════════════════════════" -ForegroundColor DarkGray
 
     $buildDir = Join-Path $PSScriptRoot $distro
@@ -35,4 +35,4 @@ foreach ($distro in $distros) {
 }
 
 Write-Host ""
-Write-Host "🌸 All builds complete!" -ForegroundColor Magenta
+Write-Host "  🌸 All builds complete!" -ForegroundColor Magenta

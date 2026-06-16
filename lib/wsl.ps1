@@ -153,7 +153,7 @@ function Show-WslDistros {
                 $version = $matches[5]
                 $color = if ($state -eq "Running") { "Green" } else { "DarkGray" }
                 $marker = if ($default -eq "*") { " *" } else { "  " }
-                Write-Host "    $marker $name".PadRight(30) -NoNewline -ForegroundColor White
+                Write-Host "    $marker $($name.PadRight(28))" -NoNewline -ForegroundColor White
                 Write-Host " v$version".PadRight(6) -NoNewline -ForegroundColor DarkGray
                 Write-Host " [$state]" -ForegroundColor $color
             }

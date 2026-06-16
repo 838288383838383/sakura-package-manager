@@ -30,6 +30,8 @@ function Invoke-SakuraTrain {
     $width = $Host.UI.RawUI.WindowSize.Width
     $height = $Host.UI.RawUI.WindowSize.Height
 
+    $ESC = [char]27
+
     # Animate the train
     for ($pos = -$train[0].Length; $pos -lt ($width + 20); $pos += 2) {
         Clear-Host
@@ -43,7 +45,7 @@ function Invoke-SakuraTrain {
                 if ($x + $line.Length -gt $width) {
                     $line = $line.Substring(0, [Math]::Max(0, $width - $x))
                 }
-                Write-Host -NoNewline ("`e[{0};{1}H" -f $y, $x) -ForegroundColor Yellow
+                Write-Host -NoNewline ("$ESC[{0};{1}H" -f $y, $x)
                 Write-Host -NoNewline $line -ForegroundColor Yellow
             }
         }

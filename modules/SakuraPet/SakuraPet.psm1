@@ -2,6 +2,10 @@
 # Your digital companion that grows as you use Sakura!
 
 $Script:PetDataPath = Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) "pet"
+# Fallback if PSScriptRoot is not set correctly
+if (-not (Test-Path $Script:PetDataPath)) {
+    $Script:PetDataPath = Join-Path $env:USERPROFILE ".sakura\pet"
+}
 
 # Pet species and evolution stages
 $Script:PetSpecies = @{

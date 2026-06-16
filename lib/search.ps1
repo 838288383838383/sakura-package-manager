@@ -2,7 +2,7 @@
 
 function Show-SakuraInstalled {
     $apps = Get-ChildItem -Path $Script:SakuraApps -Directory -ErrorAction SilentlyContinue
-    if ($apps.Count -eq 0) {
+    if (-not $apps -or $apps.Count -eq 0) {
         Write-SakuraInfo "No apps installed. Use: sakura install <app>"
         return
     }

@@ -186,12 +186,12 @@ function Install-SakuraApp {
     }
 
     # Download
-    $ext = [System.IO.Path]::GetExtension($manifest.url)
+    $url = if ($manifest.url -is [array]) { $manifest.url[0] } else { $manifest.url }
+    $ext = [System.IO.Path]::GetExtension($url)
     $downloadPath = Join-Path $Script:SakuraCache "$Name$ext"
 
     Write-SakuraProgress "Downloading..."
     try {
-        $url = if ($manifest.url -is [array]) { $manifest.url[0] } else { $manifest.url }
         $ProgressPreference = 'SilentlyContinue'
         Invoke-WebRequest -Uri $url -OutFile $downloadPath -UseBasicParsing
         Write-SakuraSuccess "Downloaded successfully."
@@ -364,7 +364,7 @@ function Install-SakuraApp {
         if ($manifest.shortcuts) {
             Write-SakuraProgress "Creating shortcuts..."
             foreach ($shortcut in $manifest.shortcuts) {
-                New-SakuraShortcut -AppName $Name -ExecutablePath (Join-Path $currentDir $shortcut[0]) -Label $shortcut[1]
+                New-SakuraShortcut -AppName $Name -ExecutablePath (Join-Path $currentDir $shortcut[1]) -Label $shortcut[0]
             }
         }
     }

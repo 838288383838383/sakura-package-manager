@@ -9,6 +9,12 @@
 .sakura/pet/
 .sakura/config.json
 
+# Separate git repos (tracked in their own repos)
+buckets/sakura-community/
+buckets/sakura-nerdfonts/
+buckets/sakura-nonportable/
+buckets/sakura-wsl/
+
 # OS files
 Thumbs.db
 Desktop.ini
