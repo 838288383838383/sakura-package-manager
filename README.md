@@ -1,5 +1,5 @@
-# 🌸 Sakura Package Manager
-
+# 🌸 Sakura Package Manager (""CANCELED"")
+(CANCEL REASON WAS DUE AN FILE CORRUPTION)
 **Your friendly Windows package manager with a digital companion inside.**
 
 Sakura is a modern, user-friendly package manager for Windows, inspired by Scoop but with a twist — it comes with a built-in Tamagotchi pet that grows and evolves as you use the package manager!
